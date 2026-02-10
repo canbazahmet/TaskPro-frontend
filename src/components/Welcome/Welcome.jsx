@@ -35,18 +35,6 @@ const Welcome = () => {
         Supercharge your productivity and take control of your tasks with Task
         Pro - Don&apos;t wait, start achieving your goals now!
       </p>
-      <ul className={s.list}>
-        <li>
-          <Link className={s.register} to="/auth/register">
-            Registration
-          </Link>
-        </li>
-        <li className={s.loginWrapper}>
-          <Link className={s.login} to="/auth/login">
-            Log In
-          </Link>
-        </li>
-      </ul>
     </div>
   );
 };
