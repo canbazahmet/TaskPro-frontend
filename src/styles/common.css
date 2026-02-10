@@ -1,0 +1,29 @@
+::-webkit-scrollbar {
+  width: 8px;
+  height: 12px;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-background);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+  transition: 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+body {
+  background-color: var(--sidebar-card-background);
+}
