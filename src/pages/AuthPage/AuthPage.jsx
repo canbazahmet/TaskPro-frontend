@@ -1,13 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router";
+import LoginForm from "../../components/LoginForm/LoginForm";
+import RegisterForm from "../../components/RegisterForm/RegisterForm";
+
 import s from "./AuthPage.module.css";
 
 const AuthPage = () => {
-  const { mode } = useParams();
+  const location = useLocation();
 
   return (
-    <div className={s.container}>
-      <h1>{mode === "login" ? "Log In" : "Registration"}</h1>
-      {/* Auth form will be added here */}
+    <div className={s.wrapper}>
+      {location.pathname === "/auth/register" && <RegisterForm />}
+      {location.pathname === "/auth/login" && <LoginForm />}
     </div>
   );
 };

@@ -33,7 +33,7 @@ const Welcome = () => {
       </div>
       <p className={s.description}>
         Supercharge your productivity and take control of your tasks with Task
-        Pro - Don&apos;t wait, start achieving your goals now!
+        Pro - Don't wait, start achieving your goals now!
       </p>
       <ul className={s.list}>
         <li>

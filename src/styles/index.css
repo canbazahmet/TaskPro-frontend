@@ -1,2 +1,5 @@
-@import "./common.css";
-@import "./fonts.css";
+@import './reset.css';
+@import './variables.css';
+@import './fonts.css';
+@import './common.css';
+@import './menuList.css';

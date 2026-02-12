@@ -1,0 +1,79 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  padding: 16px 0;
+  font-size: 14px;
+  border: none;
+
+  background-color: var(--accent);
+  color: var(--icon-wrapper-btn);
+  border-radius: 8px;
+
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  transition: background-color 0.3s ease;
+
+  max-height: 48px;
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: var(--accentBtn);
+}
+
+.btn:disabled {
+  background-color: rgb(153, 153, 153);
+}
+
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 7px;
+  border-radius: 6px;
+  background-color: var(--icon-wrapper-btn);
+
+  margin-right: 8px;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  stroke: var(--logo-icon);
+}
+
+.text {
+  display: inline-block;
+}
+
+.withIcon {
+  padding: 14px 0;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--accent);
+  border-radius: 50%;
+  width: 21px;
+  height: 21px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 1440px) {
+  .withIcon {
+    padding: 14px 0;
+  }
+}

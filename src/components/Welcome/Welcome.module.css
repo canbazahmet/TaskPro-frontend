@@ -92,7 +92,6 @@
   &:hover,
   &:focus {
     background-color: #161616d3;
-    transform: scale(1.02);
   }
 }
 
@@ -128,6 +127,5 @@
   &:hover,
   &:focus {
     color: #161616c5;
-    transform: scale(1.15);
   }
 }

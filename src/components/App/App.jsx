@@ -1,15 +1,79 @@
-import { Routes, Route } from "react-router-dom";
-import WelcomePage from "../../pages/WelcomePage/WelcomePage.jsx";
-import AuthPage from "../../pages/AuthPage/AuthPage.jsx";
-import HomePage from "../../pages/HomePage/HomePage.jsx";
+import { lazy, Suspense, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { PublicRoute } from "../PublicRoute";
+import { PrivateRoute } from "../PrivateRoute";
+import Loader from "../Loader/Loader";
+
+import {
+  selectIsRefreshing,
+  selectTheme,
+} from "../../redux/auth/authSelectors";
+
+const Layout = lazy(() => import("../Layout/Layout"));
+const AuthPage = lazy(() => import("../../pages/AuthPage/AuthPage"));
+const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
+const ScreensPage = lazy(() => import("../../pages/ScreensPage/ScreensPage"));
+const WelcomePage = lazy(() => import("../../pages/WelcomePage/WelcomePage"));
+
+import "../../styles/common.css";
+import { getUserThunk } from "../../redux/auth/authOperations";
 
 const App = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<WelcomePage />} />
-      <Route path="/auth/:mode" element={<AuthPage />} />
-      <Route path="/home" element={<HomePage />} />
-    </Routes>
+  const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectIsRefreshing);
+  const theme = useSelector(selectTheme);
+  const toastTheme = theme === "violet" ? "light" : theme;
+
+  useEffect(() => {
+    dispatch(getUserThunk());
+  }, [dispatch]);
+
+  return isRefreshing ? (
+    <div>
+      <Loader />
+    </div>
+  ) : (
+    <Suspense fallback={<Loader />}>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={toastTheme}
+      />
+      <Routes>
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute redirectTo="/welcome" component={<Layout />} />
+          }
+        >
+          <Route index element={<HomePage />} />
+          <Route path=":boardId" element={<ScreensPage />} />
+        </Route>
+        <Route
+          path="/welcome"
+          element={
+            <PublicRoute redirectTo="/home" component={<WelcomePage />} />
+          }
+        />
+        <Route
+          path="/auth/*"
+          element={<PublicRoute redirectTo="/home" component={<AuthPage />} />}
+        />
+
+        <Route path="*" element={<Navigate to={"/home"} />} />
+      </Routes>
+    </Suspense>
   );
 };
 

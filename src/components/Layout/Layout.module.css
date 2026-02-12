@@ -1,0 +1,55 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.outlet {
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+}
+
+.blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(21, 21, 21, 0.3);
+  z-index: 98;
+}
+
+@media (min-width: 1440px) {
+  .wrapper {
+    flex-direction: row;
+  }
+}
+
+.violet-theme .Toastify__toast {
+  background-color: #6a4c9c;
+  color: white;
+}
+
+.violet-theme .Toastify__toast--success {
+  background-color: #8e7dc3;
+}
+
+.violet-theme .Toastify__toast--error {
+  background-color: #9c6a86;
+}
+
+.violet-theme .Toastify__toast--warning {
+  background-color: #c68fcb;
+}
+
+.violet-theme .Toastify__toast--info {
+  background-color: #b0a0d1;
+}
