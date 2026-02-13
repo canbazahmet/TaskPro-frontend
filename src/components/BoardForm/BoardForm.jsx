@@ -1,21 +1,21 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useSelector } from "react-redux";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
 
-import Icon from "../Icon/Icon";
-import Button from "../Button/Button";
-import Images from "../../images/Image.js";
-import { selectIsLoading } from "../../redux/board/boardSelectors.js";
+import Icon from '../Icon/Icon';
+import Button from '../Button/Button';
+import Images from '../../images/Image.js';
+import { selectIsLoading } from '../../redux/board/boardSelectors.js';
 
-import s from "./BoardForm.module.css";
-import t from "../../styles/Forms.module.css";
+import s from './BoardForm.module.css';
+import t from '../../styles/Forms.module.css';
 
 const BoardForm = ({
-  initialTitle = "",
-  initialSelectedIcon = "icon_1",
-  initialSelectedBackground = "iconBackground",
-  formTitle = "New board",
-  buttonText = "Create",
+  initialTitle = '',
+  initialSelectedIcon = 'icon_1',
+  initialSelectedBackground = 'iconBackground',
+  formTitle = 'New board',
+  buttonText = 'Create',
   onSubmit,
 }) => {
   const isLoading = useSelector(selectIsLoading);
@@ -23,9 +23,9 @@ const BoardForm = ({
   const validationSchema = Yup.object().shape({
     title: Yup.string()
       .trim()
-      .min(3, "Title must be at least 3 characters long")
-      .max(30, "Title must not exceed 30 characters")
-      .required("Title is required"),
+      .min(3, 'Title must be at least 3 characters long')
+      .max(30, 'Title must not exceed 30 characters')
+      .required('Title is required'),
   });
 
   const initialValues = {
@@ -63,7 +63,7 @@ const BoardForm = ({
                       name="selectedIcon"
                       value={iconName}
                       checked={values.selectedIcon === iconName}
-                      onChange={() => setFieldValue("selectedIcon", iconName)}
+                      onChange={() => setFieldValue('selectedIcon', iconName)}
                       className={s.radioInput}
                     />
                     <Icon name={iconName} className={s.icon} />
@@ -76,7 +76,7 @@ const BoardForm = ({
             <div className={s.backgroundsContainer}>
               {Array.from({ length: 16 }, (_, index) => {
                 const isIcon = index === 0;
-                const bgName = isIcon ? "iconBackground" : `bgImage_${index}`;
+                const bgName = isIcon ? 'iconBackground' : `bgImage_${index}`;
                 const bgPreview = isIcon
                   ? null
                   : Images[`bgImage_${index}`]?.preview?.[
@@ -87,7 +87,7 @@ const BoardForm = ({
                   <label
                     key={bgName}
                     className={`${s.backgroundLabel} ${
-                      values.selectedBackground === bgName ? s.selected : ""
+                      values.selectedBackground === bgName ? s.selected : ''
                     }`}
                   >
                     <Field
@@ -96,7 +96,7 @@ const BoardForm = ({
                       value={bgName}
                       checked={values.selectedBackground === bgName}
                       onChange={() =>
-                        setFieldValue("selectedBackground", bgName)
+                        setFieldValue('selectedBackground', bgName)
                       }
                       className={s.radioInput}
                     />

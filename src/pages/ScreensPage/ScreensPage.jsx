@@ -1,20 +1,20 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
-import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard.jsx";
-import MainDashboard from "../../components/MainDashboard/MainDashboard.jsx";
-import { fetchBoard } from "../../redux/board/boardOperations";
+import HeaderDashboard from '../../components/HeaderDashboard/HeaderDashboard.jsx';
+import MainDashboard from '../../components/MainDashboard/MainDashboard.jsx';
+import { fetchBoard } from '../../redux/board/boardOperations';
 import {
   selectBoard,
   selectIsLoading,
-} from "../../redux/board/boardSelectors.js";
-import Images from "../../images/Image.js";
-import { useScreenWidth } from "../../hooks/useScreenWidth.js";
-import { selectFilterPriority } from "../../redux/filter/filterSelectors.js";
-import Loader from "../../components/Loader/Loader.jsx";
+} from '../../redux/board/boardSelectors.js';
+import Images from '../../images/Image.js';
+import { useScreenWidth } from '../../hooks/useScreenWidth.js';
+import { selectFilterPriority } from '../../redux/filter/filterSelectors.js';
+import Loader from '../../components/Loader/Loader.jsx';
 
-import s from "./ScreensPage.module.css";
+import s from './ScreensPage.module.css';
 
 const ScreensPage = () => {
   const board = useSelector(selectBoard);
@@ -53,10 +53,10 @@ const ScreensPage = () => {
             url(${selectedBackground.x2}) 2x
           )
         `,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        width: "100%",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        width: '100%',
       }
     : {};
 

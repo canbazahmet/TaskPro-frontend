@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import Modal from "../../components/ModalWrapper/ModalWrapper.jsx";
-import NewBoard from "../../components/NewBoard/NewBoard.jsx";
+import Modal from '../../components/ModalWrapper/ModalWrapper.jsx';
+import NewBoard from '../../components/NewBoard/NewBoard.jsx';
 
-import s from "./HomePage.module.css";
+import s from './HomePage.module.css';
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

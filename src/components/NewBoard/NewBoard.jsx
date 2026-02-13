@@ -1,20 +1,20 @@
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { addBoard } from "../../redux/board/boardOperations";
-import BoardForm from "../BoardForm/BoardForm";
+import { addBoard } from '../../redux/board/boardOperations';
+import BoardForm from '../BoardForm/BoardForm';
 
 const NewBoard = ({ onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCreateBoard = async (boardData) => {
+  const handleCreateBoard = async boardData => {
     const requestData = {
       title: boardData.title,
       icon: boardData.selectedIcon,
     };
 
-    if (boardData.selectedBackground !== "iconBackground") {
+    if (boardData.selectedBackground !== 'iconBackground') {
       requestData.backgroundImage = boardData.selectedBackground;
     }
 

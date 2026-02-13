@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from 'react-icons/md';
 
-import { logInThunk } from "../../redux/auth/authOperations.js";
-import { logInSchema } from "../../helpers/logInSchema.js";
-import Button from "../Button/Button.jsx";
-import { selectIsLoading } from "../../redux/auth/authSelectors.js";
+import { logInThunk } from '../../redux/auth/authOperations.js';
+import { logInSchema } from '../../helpers/logInSchema.js';
+import Button from '../Button/Button.jsx';
+import { selectIsLoading } from '../../redux/auth/authSelectors.js';
 
-import s from "./LoginForm.module.css";
+import s from './LoginForm.module.css';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +17,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const initialValues = { email: "", password: "" };
+  const initialValues = { email: '', password: '' };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -63,7 +63,7 @@ const LoginForm = () => {
             <label>
               <div className={s.passwordWrapper}>
                 <Field
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   className={s.input}
                   placeholder="Confirm a password"

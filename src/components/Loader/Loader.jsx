@@ -1,5 +1,5 @@
-import "../../styles/variables.css";
-import s from "./Loader.module.css";
+import '../../styles/variables.css';
+import s from './Loader.module.css';
 
 const Loader = () => {
   return (

@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import Icon from "../Icon/Icon";
-import PersonMobile1x from "../../images/person_mobile@1x.webp";
-import PersonMobile2x from "../../images/person_mobile@2x.webp";
-import PersonDesktop1x from "../../images/person_desktop@1x.webp";
-import PersonDesktop2x from "../../images/person_desktop@2x.webp";
+import Icon from '../Icon/Icon';
+import PersonMobile1x from '../../images/person_mobile@1x.webp';
+import PersonMobile2x from '../../images/person_mobile@2x.webp';
+import PersonDesktop1x from '../../images/person_desktop@1x.webp';
+import PersonDesktop2x from '../../images/person_desktop@2x.webp';
 
-import s from "./Welcome.module.css";
+import s from './Welcome.module.css';
 
 const Welcome = () => {
   return (
@@ -27,13 +27,13 @@ const Welcome = () => {
         />
       </picture>
       <div className={s.iconProject}>
-        <Icon name={"icon_6"} className={s.iconName} />
+        <Icon name={'icon_6'} className={s.iconName} />
 
         <h1 className={s.projectName}>Task Pro</h1>
       </div>
       <p className={s.description}>
         Supercharge your productivity and take control of your tasks with Task
-        Pro - Don't wait, start achieving your goals now!
+        Pro - Don&apos;t wait, start achieving your goals now!
       </p>
       <ul className={s.list}>
         <li>

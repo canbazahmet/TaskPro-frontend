@@ -1,43 +1,43 @@
-import { Suspense, useCallback, useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Suspense, useCallback, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Header from "../Header/Header";
-import Sidebar from "../Sidebar/Sidebar";
-import Loader from "../Loader/Loader";
+import Header from '../Header/Header';
+import Sidebar from '../Sidebar/Sidebar';
+import Loader from '../Loader/Loader';
 
-import { setIsSidebarOpen, setTheme } from "../../redux/auth/authSlice";
+import { setIsSidebarOpen, setTheme } from '../../redux/auth/authSlice';
 import {
   selectIsSidebarOpen,
   selectTheme,
-} from "../../redux/auth/authSelectors";
+} from '../../redux/auth/authSelectors';
 
-import s from "./Layout.module.css";
+import s from './Layout.module.css';
 
 export const Layout = () => {
   const dispatch = useDispatch();
 
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
 
-  const sidebarRef = document.getElementById("sidebar");
-  const modalWrapperRef = document.getElementById("wrapperModal");
+  const sidebarRef = document.getElementById('sidebar');
+  const modalWrapperRef = document.getElementById('wrapperModal');
 
   const theme = useSelector(selectTheme);
 
   const handleClickOutside = useCallback(
-    (event) => {
+    event => {
       if (sidebarRef && modalWrapperRef && !sidebarRef.contains(event.target)) {
         dispatch(setIsSidebarOpen(false));
       }
     },
-    [dispatch, sidebarRef, modalWrapperRef],
+    [dispatch, sidebarRef, modalWrapperRef]
   );
 
   useEffect(() => {
     dispatch(setTheme());
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isSidebarOpen, dispatch, theme, handleClickOutside]);
 

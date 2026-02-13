@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import Icon from "../Icon/Icon";
-import flowerpot from "../../images/flowerpot.webp";
-import HelpForm from "./HelpForm/HelpForm.jsx";
+import Icon from '../Icon/Icon';
+import flowerpot from '../../images/flowerpot.webp';
+import HelpForm from './HelpForm/HelpForm.jsx';
 
-import s from "../NeedHelp/NeedHelp.module.css";
+import s from '../NeedHelp/NeedHelp.module.css';
 
 const NeedHelp = () => {
   const [open, setOpen] = useState(false);

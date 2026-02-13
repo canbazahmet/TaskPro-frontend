@@ -1,4 +1,4 @@
-export const handlePending = (state) => {
+export const handlePending = state => {
   state.isError = false;
   state.isLoading = true;
 };
@@ -7,6 +7,6 @@ export const handleRejected = (state, action) => {
   state.isLoading = false;
 };
 
-export const handleFulFilled = (state) => {
+export const handleFulFilled = state => {
   state.isLoading = false;
 };

@@ -2,7 +2,7 @@ import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { showToast } from "../toastHelper";
 
-axios.defaults.baseURL = "https://taskpro-backend-qxl7.onrender.com";
+axios.defaults.baseURL = "https://taskpro-backend-qxl7.onrender.com/";
 
 const setAuthHeader = (token) => {
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;

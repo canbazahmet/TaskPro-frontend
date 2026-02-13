@@ -1,23 +1,22 @@
-import { useEffect } from "react";
-import { Modal, Backdrop } from "@mui/material";
-import svg from "../../images/icons.svg";
-import s from "./ModalWrapper.module.css";
-import clsx from "clsx";
-
-const ModalWrapper = ({ open, onClose, children, className = "" }) => {
+import { useEffect } from 'react';
+import { Modal, Backdrop } from '@mui/material';
+import svg from '../../images/icons.svg';
+import s from './ModalWrapper.module.css';
+import clsx from 'clsx';
+const ModalWrapper = ({ open, onClose, children, className = '' }) => {
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
+    const handleKeyDown = event => {
+      if (event.key === 'Escape') {
         onClose();
       }
     };
 
     if (open) {
-      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [open, onClose]);
   const UpdatedModalContainer = clsx(s.modalContainer, className);
@@ -30,7 +29,7 @@ const ModalWrapper = ({ open, onClose, children, className = "" }) => {
       BackdropComponent={Backdrop}
       BackdropProps={{
         timeout: 200,
-        sx: { backgroundColor: "rgba(21, 21, 21, 0.3)" },
+        sx: { backgroundColor: 'rgba(21, 21, 21, 0.3)' },
       }}
     >
       <div className={UpdatedModalContainer}>

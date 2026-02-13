@@ -1,23 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import { sendEmail } from "../auth/authOperations";
+import { sendEmail } from '../auth/authOperations';
 
 const emailSlice = createSlice({
-  name: "email",
+  name: 'email',
   initialState: {
     loading: false,
     success: null,
     error: null,
   },
   reducers: {
-    clearStatus: (state) => {
+    clearStatus: state => {
       state.success = null;
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(sendEmail.pending, (state) => {
+      .addCase(sendEmail.pending, state => {
         state.loading = true;
         state.success = null;
         state.error = null;
@@ -30,7 +30,7 @@ const emailSlice = createSlice({
       .addCase(sendEmail.rejected, (state, action) => {
         state.loading = false;
         state.success = null;
-        state.error = action.payload || "Something went wrong";
+        state.error = action.payload || 'Something went wrong';
       });
   },
 });

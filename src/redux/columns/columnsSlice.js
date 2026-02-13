@@ -1,10 +1,10 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
-import { handleFulFilled, handlePending, handleRejected } from "../handlers";
-import { fetchBoard } from "../board/boardOperations";
-import { addColumn, deleteColumn, updateColumn } from "./columnsOperations";
-import { addTask, deleteTask, updateTask } from "../tasks/tasksOperations";
-import { logOutThunk } from "../auth/authOperations";
+import { handleFulFilled, handlePending, handleRejected } from '../handlers';
+import { fetchBoard } from '../board/boardOperations';
+import { addColumn, deleteColumn, updateColumn } from './columnsOperations';
+import { addTask, deleteTask, updateTask } from '../tasks/tasksOperations';
+import { logOutThunk } from '../auth/authOperations';
 
 const initialState = {
   columns: [],
@@ -14,14 +14,14 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: "columns",
+  name: 'columns',
   initialState,
   reducers: {
     setCurrentColumn(state, action) {
       state.currentColumn = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(logOutThunk.fulfilled, () => {
         return initialState;
@@ -29,32 +29,32 @@ const slice = createSlice({
       .addCase(fetchBoard.fulfilled, (state, action) => {
         state.columns = action.payload.columns?.map(({ tasks, ...rest }) => ({
           ...rest,
-          tasksIds: tasks ? tasks.map((task) => task._id) : [],
+          tasksIds: tasks ? tasks.map(task => task._id) : [],
         }));
       })
       .addCase(addColumn.fulfilled, (state, action) => {
         const { tasks, ...rest } = action.payload;
         state.columns.push({
           ...rest,
-          tasksIds: tasks ? tasks.map((task) => task._id) : [],
+          tasksIds: tasks ? tasks.map(task => task._id) : [],
         });
       })
       .addCase(deleteColumn.fulfilled, (state, action) => {
         state.columns = state.columns.filter(
-          (column) => column._id !== action.payload,
+          column => column._id !== action.payload
         );
         state.currentColumn = null;
       })
       .addCase(updateColumn.fulfilled, (state, action) => {
-        state.columns = state.columns.map((column) =>
+        state.columns = state.columns.map(column =>
           column._id === action.payload._id
             ? { ...action.payload, tasksIds: [...column.tasksIds] }
-            : column,
+            : column
         );
       })
       .addCase(addTask.fulfilled, (state, action) => {
         const column = state.columns.find(
-          (col) => col._id === action.payload.columnId,
+          col => col._id === action.payload.columnId
         );
 
         if (column) {
@@ -63,25 +63,25 @@ const slice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         const columnIndex = state.columns.findIndex(
-          (col) => col._id === action.payload.columnId,
+          col => col._id === action.payload.columnId
         );
         if (columnIndex !== -1) {
           state.columns[columnIndex].tasksIds = state.columns[
             columnIndex
-          ].tasksIds.filter((taskId) => taskId !== action.payload.id);
+          ].tasksIds.filter(taskId => taskId !== action.payload.id);
         }
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         const { _id: taskId, columnId: newColumnId } = action.payload;
 
-        const oldColumn = state.columns.find((col) =>
-          col.tasksIds.includes(taskId),
+        const oldColumn = state.columns.find(col =>
+          col.tasksIds.includes(taskId)
         );
 
-        const newColumn = state.columns.find((col) => col._id === newColumnId);
+        const newColumn = state.columns.find(col => col._id === newColumnId);
 
         if (oldColumn) {
-          oldColumn.tasksIds = oldColumn.tasksIds.filter((id) => id !== taskId);
+          oldColumn.tasksIds = oldColumn.tasksIds.filter(id => id !== taskId);
         }
         if (newColumn) {
           newColumn.tasksIds.push(taskId);
@@ -95,9 +95,9 @@ const slice = createSlice({
           updateColumn.pending,
           addTask.pending,
           deleteTask.pending,
-          updateTask.pending,
+          updateTask.pending
         ),
-        handlePending,
+        handlePending
       )
       .addMatcher(
         isAnyOf(
@@ -107,9 +107,9 @@ const slice = createSlice({
           updateColumn.rejected,
           addTask.rejected,
           deleteTask.rejected,
-          updateTask.rejected,
+          updateTask.rejected
         ),
-        handleRejected,
+        handleRejected
       )
       .addMatcher(
         isAnyOf(
@@ -119,9 +119,9 @@ const slice = createSlice({
           updateColumn.fulfilled,
           addTask.fulfilled,
           deleteTask.fulfilled,
-          updateTask.fulfilled,
+          updateTask.fulfilled
         ),
-        handleFulFilled,
+        handleFulFilled
       );
   },
 });

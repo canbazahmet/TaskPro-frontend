@@ -1,17 +1,17 @@
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
-import { selectBoard } from "../../redux/board/boardSelectors.js";
-import { useToggle } from "../../hooks/useToggle.js";
-import Icon from "../Icon/Icon";
-import Filter from "../Filter/Filter.jsx";
+import { selectBoard } from '../../redux/board/boardSelectors.js';
+import { useToggle } from '../../hooks/useToggle.js';
+import Icon from '../Icon/Icon';
+import Filter from '../Filter/Filter.jsx';
 
-import s from "./HeaderDashboard.module.css";
+import s from './HeaderDashboard.module.css';
 
 export const HeaderDashboard = () => {
   const { open, handleOpen, handleClose } = useToggle();
 
   const board = useSelector(selectBoard);
-  const title = board?.title ?? "";
+  const title = board?.title ?? '';
 
   return (
     <div className={s.container}>

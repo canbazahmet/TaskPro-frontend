@@ -27,7 +27,7 @@
   stroke: var(--text-color);
   background-color: var(--board-item-active-background);
   & :after {
-    content: "";
+    content: '';
     background-color: var(--board-item-active-accent);
     position: absolute;
     top: 0;

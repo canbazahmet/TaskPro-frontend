@@ -1,32 +1,32 @@
-import { lazy, Suspense, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { lazy, Suspense, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { PublicRoute } from "../PublicRoute";
-import { PrivateRoute } from "../PrivateRoute";
-import Loader from "../Loader/Loader";
+import { PublicRoute } from '../PublicRoute';
+import { PrivateRoute } from '../PrivateRoute';
+import Loader from '../Loader/Loader';
 
 import {
   selectIsRefreshing,
   selectTheme,
-} from "../../redux/auth/authSelectors";
+} from '../../redux/auth/authSelectors';
 
-const Layout = lazy(() => import("../Layout/Layout"));
-const AuthPage = lazy(() => import("../../pages/AuthPage/AuthPage"));
-const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
-const ScreensPage = lazy(() => import("../../pages/ScreensPage/ScreensPage"));
-const WelcomePage = lazy(() => import("../../pages/WelcomePage/WelcomePage"));
+const Layout = lazy(() => import('../Layout/Layout'));
+const AuthPage = lazy(() => import('../../pages/AuthPage/AuthPage'));
+const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
+const ScreensPage = lazy(() => import('../../pages/ScreensPage/ScreensPage'));
+const WelcomePage = lazy(() => import('../../pages/WelcomePage/WelcomePage'));
 
-import "../../styles/common.css";
-import { getUserThunk } from "../../redux/auth/authOperations";
+import '../../styles/common.css';
+import { getUserThunk } from '../../redux/auth/authOperations';
 
 const App = () => {
   const dispatch = useDispatch();
   const isRefreshing = useSelector(selectIsRefreshing);
   const theme = useSelector(selectTheme);
-  const toastTheme = theme === "violet" ? "light" : theme;
+  const toastTheme = theme === 'violet' ? 'light' : theme;
 
   useEffect(() => {
     dispatch(getUserThunk());
@@ -71,7 +71,7 @@ const App = () => {
           element={<PublicRoute redirectTo="/home" component={<AuthPage />} />}
         />
 
-        <Route path="*" element={<Navigate to={"/home"} />} />
+        <Route path="*" element={<Navigate to={'/home'} />} />
       </Routes>
     </Suspense>
   );

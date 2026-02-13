@@ -1,18 +1,18 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
-import Icon from "../Icon/Icon";
+import Icon from '../Icon/Icon';
 
-import s from "./Button.module.css";
+import s from './Button.module.css';
 
 const Button = ({
   onClick,
   text,
   showIcon = false,
-  className = "",
+  className = '',
   isLoading = false,
   ...props
 }) => {
-  const buttonClasses = clsx(s.btn, showIcon ? s.withIcon : "", className);
+  const buttonClasses = clsx(s.btn, showIcon ? s.withIcon : '', className);
 
   return (
     <button

@@ -1,9 +1,9 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
-import { handleFulFilled, handlePending, handleRejected } from "../handlers";
-import { fetchBoard } from "../board/boardOperations";
-import { addTask, deleteTask, updateTask } from "./tasksOperations";
-import { logOutThunk } from "../auth/authOperations";
+import { handleFulFilled, handlePending, handleRejected } from '../handlers';
+import { fetchBoard } from '../board/boardOperations';
+import { addTask, deleteTask, updateTask } from './tasksOperations';
+import { logOutThunk } from '../auth/authOperations';
 
 const initialState = {
   tasks: [],
@@ -13,22 +13,22 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: "tasks",
+  name: 'tasks',
   initialState,
   reducers: {
     setCurrentTask(state, action) {
       state.currentTask = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
       .addCase(logOutThunk.fulfilled, () => {
         return initialState;
       })
       .addCase(fetchBoard.fulfilled, (state, action) => {
         state.tasks =
-          action.payload.columns?.flatMap((column) =>
-            column.tasks.map((task) => task),
+          action.payload.columns?.flatMap(column =>
+            column.tasks.map(task => task)
           ) || [];
       })
       .addCase(addTask.fulfilled, (state, action) => {
@@ -36,27 +36,27 @@ const slice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter(
-          (task) => task._id !== action.payload.id,
+          task => task._id !== action.payload.id
         );
         state.currentTask = null;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         const updatedTask = action.payload;
-        state.tasks = state.tasks.map((task) =>
-          task._id === updatedTask._id ? updatedTask : task,
+        state.tasks = state.tasks.map(task =>
+          task._id === updatedTask._id ? updatedTask : task
         );
       })
       .addMatcher(
         isAnyOf(addTask.pending, deleteTask.pending, updateTask.pending),
-        handlePending,
+        handlePending
       )
       .addMatcher(
         isAnyOf(addTask.rejected, deleteTask.rejected, updateTask.rejected),
-        handleRejected,
+        handleRejected
       )
       .addMatcher(
         isAnyOf(addTask.fulfilled, deleteTask.fulfilled, updateTask.fulfilled),
-        handleFulFilled,
+        handleFulFilled
       );
   },
 });

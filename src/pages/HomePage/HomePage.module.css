@@ -1,23 +1,31 @@
-.container {
+.homePage_container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 100%;
-  min-height: 100vh;
-  padding: 20px;
-  background: linear-gradient(180deg, rgb(247, 245, 245) 25%, #bedbb0 92.19%);
+  justify-content: center;
+  height: 100%;
 }
 
-.container h1 {
-  font-size: 36px;
-  font-weight: 600;
-  color: #161616;
-  margin-bottom: 40px;
+.text {
+  width: 335px;
+  text-align: center;
+  color: var(--text-header-color);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: -0.24px;
+}
+
+.btn {
+  color: var(--accent);
 }
 
 @media only screen and (min-width: 768px) {
-  .container h1 {
-    font-size: 44px;
+  .text {
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.28px;
+    width: 468px;
   }
 }

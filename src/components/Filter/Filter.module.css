@@ -35,7 +35,7 @@
 
 .button::after {
   position: absolute;
-  content: "";
+  content: '';
   bottom: 2px;
   left: 0;
   height: 1px;
@@ -82,7 +82,7 @@
 
 .radio::after {
   position: absolute;
-  content: "";
+  content: '';
   height: 10px;
   width: 10px;
   border-radius: 50%;

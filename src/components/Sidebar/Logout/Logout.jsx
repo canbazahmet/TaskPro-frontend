@@ -1,9 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 
-import Icon from "../../Icon/Icon.jsx";
-import { logOutThunk } from "../../../redux/auth/authOperations.js";
+import Icon from '../../Icon/Icon.jsx';
+import { logOutThunk } from '../../../redux/auth/authOperations.js';
 
-import s from "./Logout.module.css";
+import s from './Logout.module.css';
 
 const LogOut = () => {
   const dispatch = useDispatch();

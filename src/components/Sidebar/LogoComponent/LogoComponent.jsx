@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import Icon from "../../Icon/Icon";
+import Icon from '../../Icon/Icon';
 
-import s from "./LogoComponent.module.css";
+import s from './LogoComponent.module.css';
 
 const LogoComponent = () => {
   return (

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import Icon from "../Icon/Icon";
-import HeaderTheme from "../HeaderTheme/HeaderTheme";
-import { selectUser } from "../../redux/auth/authSelectors";
-import { getUserThunk } from "../../redux/auth/authOperations";
-import { useScreenWidth } from "../../hooks/useScreenWidth";
-import EditProfile from "../EditProfile/EditProfile";
+import Icon from '../Icon/Icon';
+import HeaderTheme from '../HeaderTheme/HeaderTheme';
+import { selectUser } from '../../redux/auth/authSelectors';
+import { getUserThunk } from '../../redux/auth/authOperations';
+import { useScreenWidth } from '../../hooks/useScreenWidth';
+import EditProfile from '../EditProfile/EditProfile';
 
-import s from "./Header.module.css";
+import s from './Header.module.css';
 
 const Header = ({ onBurgerClick }) => {
   const dispatch = useDispatch();
@@ -30,14 +30,14 @@ const Header = ({ onBurgerClick }) => {
     <header className={s.header}>
       {!isLargeScreen && (
         <button onClick={() => onBurgerClick()}>
-          <Icon name={"icon-menu"} className={s.menu_icon} />
+          <Icon name={'icon-menu'} className={s.menu_icon} />
         </button>
       )}
       <div className={s.theme_user_wrap}>
         <HeaderTheme />
 
         <button className={s.profile} onClick={handleOpen}>
-          <p className={s.userName}>{user.name || "Loading..."}</p>
+          <p className={s.userName}>{user.name || 'Loading...'}</p>
           {user?.avatar ? (
             <img
               src={user.avatar}
@@ -46,7 +46,7 @@ const Header = ({ onBurgerClick }) => {
             />
           ) : (
             <div className={s.userIconWrapper}>
-              <Icon name={"icon-user"} className={s.userIcon} />
+              <Icon name={'icon-user'} className={s.userIcon} />
             </div>
           )}
         </button>
