@@ -1,0 +1,47 @@
+.sidedbarLogout {
+  display: flex;
+  flex-direction: row;
+  padding-left: 24px;
+  padding-bottom: 24px;
+}
+
+.logoutBtn {
+  background-color: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+  width: 150px;
+  height: 32px;
+}
+
+.logoutBtn:hover,
+.logoutBtn:focus {
+  & p {
+    color: var(--accentBtn);
+  }
+  & svg {
+    stroke: var(--accentBtn);
+  }
+}
+
+.iconlogout {
+  fill: none;
+  stroke: var(--icon-logout);
+  height: 32px;
+  width: 32px;
+  transition: stroke 0.3s ease;
+}
+
+.textLogout {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+@media (min-width: 1440px) {
+  .textLogout {
+    font-size: 16px;
+  }
+}

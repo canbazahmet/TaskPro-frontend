@@ -1,0 +1,84 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  background-color: var(--sidebar-background-color);
+  width: 225px;
+  padding: 0;
+  transition: all ease-in-out 300ms;
+  height: 100%;
+}
+
+.mobile {
+  position: fixed;
+  z-index: 99;
+}
+
+.sidebarOpen {
+  transform: translateX(0);
+}
+
+.sidebarClose {
+  transform: translateX(-250%);
+}
+
+.sidebarTitle {
+  text-align: left;
+  margin-bottom: 8px;
+  font-size: 12px;
+  letter-spacing: -0.02em;
+  color: var(--title-item);
+}
+
+.sidedbarLogout {
+  display: flex;
+  flex-direction: row;
+  padding-left: 24px;
+  padding-bottom: 24px;
+}
+
+.logoutBtn {
+  background-color: var(--background-color);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+  width: 150px;
+  height: 32px;
+}
+
+.iconlogout {
+  fill: none;
+  stroke: #bedbb0;
+  height: 32px;
+  width: 32px;
+}
+
+.textLogout {
+  font-size: 14px;
+  color: #161616;
+  font-weight: 500;
+}
+
+.wrap {
+  padding: 14px;
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 100%;
+    max-width: 260px;
+    padding: 0;
+  }
+
+  .wrap {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .project {
+    margin-bottom: auto;
+  }
+}
