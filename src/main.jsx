@@ -11,7 +11,9 @@ import { persistor, store } from "./redux/store.js";
 import App from "./components/App/App.jsx";
 import "./styles/index.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://taskpro-backend-qxl7.onrender.com/';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://taskpro-backend-qxl7.onrender.com/";
 axios.defaults.baseURL = API_BASE_URL;
 
 createRoot(document.getElementById("root")).render(
