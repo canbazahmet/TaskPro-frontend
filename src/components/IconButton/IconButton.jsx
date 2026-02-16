@@ -1,11 +1,16 @@
-import { memo } from "react";
-import clsx from "clsx";
+import clsx from 'clsx';
 
-import Icon from "../Icon/Icon.jsx";
+import Icon from '../Icon/Icon.jsx';
 
-import s from "./IconButton.module.css";
+import s from './IconButton.module.css';
 
-const IconButton = ({ name, className, width = 16, height = 16, onClick }) => {
+export const IconButton = ({
+  name,
+  className,
+  width = 16,
+  height = 16,
+  onClick,
+}) => {
   return (
     <button type="button" onClick={onClick}>
       <Icon
@@ -18,4 +23,4 @@ const IconButton = ({ name, className, width = 16, height = 16, onClick }) => {
   );
 };
 
-export default memo(IconButton);
+export default IconButton;

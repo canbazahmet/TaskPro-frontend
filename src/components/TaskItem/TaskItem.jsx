@@ -1,25 +1,18 @@
-import { useState, useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import clsx from "clsx";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 
-import Icon from "../Icon/Icon";
-import ModalWrapper from "../../components/ModalWrapper/ModalWrapper";
-import EditCard from "../../components/EditCard/EditCard";
-import MoveTaskMenu from "../MoveTaskMenu/MoveTaskMenu";
-import IconButton from "../IconButton/IconButton";
+import Icon from '../Icon/Icon';
+import ModalWrapper from '../../components/ModalWrapper/ModalWrapper';
+import EditCard from '../../components/EditCard/EditCard';
+import MoveTaskMenu from '../MoveTaskMenu/MoveTaskMenu';
+import IconButton from '../IconButton/IconButton';
 
-import { deleteTask, updateTask } from "../../redux/tasks/tasksOperations";
-import { setCurrentTask } from "../../redux/tasks/tasksSlice";
-import { selectColumnsForBoard } from "../../redux/columns/columnsSelectors";
+import { deleteTask, updateTask } from '../../redux/tasks/tasksOperations';
+import { setCurrentTask } from '../../redux/tasks/tasksSlice';
+import { selectColumnsForBoard } from '../../redux/columns/columnsSelectors';
 
-import s from "./TaskItem.module.css";
-
-const PRIORITY_CLASS_MAP = {
-  without: "priority_without",
-  low: "priority_low",
-  medium: "priority_medium",
-  high: "priority_high",
-};
+import s from './TaskItem.module.css';
 
 const TaskItem = ({ tasks, boardId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,89 +21,94 @@ const TaskItem = ({ tasks, boardId }) => {
   const [loadingTaskId, setLoadingTaskId] = useState(null);
 
   const dispatch = useDispatch();
-  const columns = useSelector((state) => selectColumnsForBoard(state, boardId));
+  const columns = useSelector(state => selectColumnsForBoard(state, boardId));
 
-  const handleOpenModal = useCallback(
-    (taskCard) => {
-      dispatch(setCurrentTask(taskCard));
-      setIsModalOpen(true);
-    },
-    [dispatch],
-  );
+  useEffect(() => {
+    return () => {
+      setAnchorEl(null);
+    };
+  }, []);
 
-  const handleCloseModal = useCallback(() => setIsModalOpen(false), []);
+  const handleOpenModal = taskCard => {
+    dispatch(setCurrentTask(taskCard));
+    setIsModalOpen(true);
+  };
 
-  const handleOpenMenu = useCallback((event, task) => {
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleOpenMenu = (event, task) => {
     setAnchorEl(event.currentTarget);
     setTaskToEdit(task);
-  }, []);
+  };
 
-  const handleCloseMenu = useCallback(() => {
+  const handleCloseMenu = () => {
     setAnchorEl(null);
     setTaskToEdit(null);
-  }, []);
+  };
 
-  const handleMoveTask = useCallback(
-    (newColumnId) => {
-      if (taskToEdit) {
-        dispatch(
-          updateTask({
-            task: { columnId: newColumnId },
-            id: taskToEdit._id,
-          }),
-        );
-        handleCloseMenu();
-      }
-    },
-    [taskToEdit, dispatch, handleCloseMenu],
-  );
+  const handleMoveTask = newColumnId => {
+    const task = {
+      columnId: newColumnId,
+    };
 
-  const handleDeleteTask = useCallback(
-    (taskCard) => {
-      setLoadingTaskId(taskCard._id);
-      dispatch(
-        deleteTask({
-          id: taskCard._id,
-          columnId: taskCard.columnId,
-        }),
-      ).finally(() => {
-        setLoadingTaskId(null);
-      });
-    },
-    [dispatch],
-  );
+    dispatch(
+      updateTask({
+        task,
+        id: taskToEdit._id,
+      })
+    );
 
-  const formatDate = useCallback((isoDate) => {
+    handleCloseMenu();
+  };
+
+  const handleDeleteTask = taskCard => {
+    setLoadingTaskId(taskCard._id);
+    dispatch(
+      deleteTask({
+        id: taskCard._id,
+        columnId: taskCard.columnId,
+      })
+    ).finally(() => {
+      setLoadingTaskId(null);
+    });
+  };
+
+  const taskArr = tasks;
+
+  const formatDate = isoDate => {
     const date = new Date(isoDate);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;
-  }, []);
+  };
 
-  const isDeadlineToday = useCallback((isoDate) => {
+  const isDeadlineToday = isoDate => {
     const deadlineDate = new Date(isoDate).toDateString();
     const todayDate = new Date().toDateString();
     return deadlineDate === todayDate;
-  }, []);
+  };
 
-  const getPriorityClass = useCallback((priority) => {
-    const key = priority?.toLowerCase() || "without";
-    return s[PRIORITY_CLASS_MAP[key]] || s.priority_without;
-  }, []);
-
-  const hasTasksToRender = useMemo(() => tasks && tasks.length > 0, [tasks]);
+  const getPriorityClass = priority => {
+    const priorityMap = {
+      without: s.priority_without,
+      low: s.priority_low,
+      medium: s.priority_medium,
+      high: s.priority_high,
+    };
+    return priorityMap[priority.toLowerCase()] || s.priority_without;
+  };
 
   return (
     <>
-      {hasTasksToRender &&
-        tasks.map((taskCard) => (
+      {taskArr?.length > 0 &&
+        taskArr.map(taskCard => (
           <div
             key={taskCard._id}
             className={clsx(s.card_item, getPriorityClass(taskCard.priority))}
           >
             <h4 className={s.task_title}>{taskCard.title}</h4>
-            <span className={s.task_description}>{taskCard.description}</span>
+            <p className={s.task_description}>{taskCard.description}</p>
             <span className={s.separator}></span>
             <div className={s.task_footer}>
               <div className={s.task_container_wrapper}>
@@ -118,7 +116,7 @@ const TaskItem = ({ tasks, boardId }) => {
                 <div
                   className={clsx(
                     s.task_priority,
-                    getPriorityClass(taskCard.priority),
+                    getPriorityClass(taskCard.priority)
                   )}
                 >
                   <span className={s.task_priority_text}>
@@ -141,7 +139,7 @@ const TaskItem = ({ tasks, boardId }) => {
                 <IconButton
                   className={s.right_arrow}
                   name="icon-right"
-                  onClick={(event) => handleOpenMenu(event, taskCard)}
+                  onClick={event => handleOpenMenu(event, taskCard)}
                 />
                 <IconButton
                   name="icon-pencil"

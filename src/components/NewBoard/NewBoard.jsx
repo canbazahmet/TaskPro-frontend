@@ -1,35 +1,27 @@
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useCallback } from "react";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { addBoard } from "../../redux/board/boardOperations";
-import BoardForm from "../BoardForm/BoardForm";
+import { addBoard } from '../../redux/board/boardOperations';
+import BoardForm from '../BoardForm/BoardForm';
 
 const NewBoard = ({ onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCreateBoard = useCallback(
-    async (boardData) => {
-      const requestData = {
-        title: boardData.title,
-        icon: boardData.selectedIcon,
-      };
+  const handleCreateBoard = async boardData => {
+    const requestData = {
+      title: boardData.title,
+      icon: boardData.selectedIcon,
+    };
 
-      if (boardData.selectedBackground !== "iconBackground") {
-        requestData.backgroundImage = boardData.selectedBackground;
-      }
+    if (boardData.selectedBackground !== 'iconBackground') {
+      requestData.backgroundImage = boardData.selectedBackground;
+    }
 
-      try {
-        const newBoard = await dispatch(addBoard(requestData)).unwrap();
-        navigate(`/home/${newBoard._id}`);
-        onClose();
-      } catch (error) {
-        console.error("Error creating board:", error);
-      }
-    },
-    [dispatch, navigate, onClose],
-  );
+    const newBoard = await dispatch(addBoard(requestData)).unwrap();
+    navigate(`/home/${newBoard._id}`);
+    onClose();
+  };
 
   return (
     <div>

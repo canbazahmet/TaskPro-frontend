@@ -1,8 +1,8 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
-import * as operation from "./authOperations";
-import { addBoard, deleteBoard, updateBoard } from "../board/boardOperations";
-import { handleFulFilled, handlePending, handleRejected } from "../handlers";
+import * as operation from './authOperations';
+import { addBoard, deleteBoard, updateBoard } from '../board/boardOperations';
+import { handleFulFilled, handlePending, handleRejected } from '../handlers';
 
 const initialState = {
   user: {
@@ -10,7 +10,7 @@ const initialState = {
     name: null,
     email: null,
     avatar: null,
-    theme: "light",
+    theme: 'light',
     boards: [],
   },
   token: null,
@@ -22,9 +22,12 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
+    setTheme(state) {
+      document.body.classList = state.user.theme;
+    },
     changeTheme(state, action) {
       state.user.theme = action.payload;
     },
@@ -32,15 +35,15 @@ const authSlice = createSlice({
       state.isSidebarOpen = action.payload;
     },
   },
-  extraReducers: (builder) =>
+  extraReducers: builder =>
     builder
-      .addCase(operation.logOutThunk.fulfilled, (state) => {
+      .addCase(operation.logOutThunk.fulfilled, state => {
         state.user = {
           _id: null,
           name: null,
           email: null,
           avatar: null,
-          theme: "light",
+          theme: 'light',
           boards: [],
         };
         state.token = null;
@@ -58,7 +61,7 @@ const authSlice = createSlice({
         state.user = { ...state.user, ...action.payload };
       })
 
-      .addCase(operation.getUserThunk.pending, (state) => {
+      .addCase(operation.getUserThunk.pending, state => {
         state.isRefreshing = true;
       })
       .addCase(operation.getUserThunk.fulfilled, (state, action) => {
@@ -66,7 +69,7 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
         state.isRefreshing = false;
       })
-      .addCase(operation.getUserThunk.rejected, (state) => {
+      .addCase(operation.getUserThunk.rejected, state => {
         state.isRefreshing = false;
         state.isLoggedIn = false;
       })
@@ -75,12 +78,12 @@ const authSlice = createSlice({
       })
       .addCase(deleteBoard.fulfilled, (state, action) => {
         state.user.boards = state.user.boards.filter(
-          (board) => board._id !== action.payload,
+          board => board._id !== action.payload
         );
       })
       .addCase(updateBoard.fulfilled, (state, action) => {
-        state.user.boards = state.user.boards.map((board) =>
-          board._id === action.payload._id ? action.payload : board,
+        state.user.boards = state.user.boards.map(board =>
+          board._id === action.payload._id ? action.payload : board
         );
       })
       .addMatcher(
@@ -91,9 +94,9 @@ const authSlice = createSlice({
           operation.updateUserThemeThunk.pending,
           operation.updateUserThunk.pending,
           operation.getUserThunk.pending,
-          deleteBoard.pending,
+          deleteBoard.pending
         ),
-        handlePending,
+        handlePending
       )
       .addMatcher(
         isAnyOf(
@@ -103,9 +106,9 @@ const authSlice = createSlice({
           operation.updateUserThemeThunk.fulfilled,
           operation.updateUserThunk.fulfilled,
           operation.getUserThunk.fulfilled,
-          deleteBoard.fulfilled,
+          deleteBoard.fulfilled
         ),
-        handleFulFilled,
+        handleFulFilled
       )
       .addMatcher(
         isAnyOf(
@@ -115,11 +118,11 @@ const authSlice = createSlice({
           operation.updateUserThemeThunk.rejected,
           operation.updateUserThunk.rejected,
           operation.getUserThunk.rejected,
-          deleteBoard.rejected,
+          deleteBoard.rejected
         ),
-        handleRejected,
+        handleRejected
       ),
 });
 
 export const authReducer = authSlice.reducer;
-export const { changeTheme, setIsSidebarOpen } = authSlice.actions;
+export const { setTheme, changeTheme, setIsSidebarOpen } = authSlice.actions;

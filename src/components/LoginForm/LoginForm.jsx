@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from 'react-icons/md';
 
-import { logInThunk, getUserThunk } from "../../redux/auth/authOperations.js";
-import { loginSchema } from "../../helpers/logInSchema.js";
-import Button from "../Button/Button.jsx";
-import { selectIsLoading } from "../../redux/auth/authSelectors.js";
+import { logInThunk } from '../../redux/auth/authOperations.js';
+import { logInSchema } from '../../helpers/logInSchema.js';
+import Button from '../Button/Button.jsx';
+import { selectIsLoading } from '../../redux/auth/authSelectors.js';
 
-import s from "./LoginForm.module.css";
+import s from './LoginForm.module.css';
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,24 +17,16 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
 
-  const initialValues = { email: "", password: "" };
+  const initialValues = { email: '', password: '' };
 
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  const handleSubmit = useCallback(
-    async (values, actions) => {
-      try {
-        await dispatch(logInThunk(values)).unwrap();
-        await dispatch(getUserThunk()).unwrap();
-        actions.resetForm();
-      } finally {
-        actions.setSubmitting(false);
-      }
-    },
-    [dispatch],
-  );
+  const handleSubmit = (values, action) => {
+    dispatch(logInThunk(values));
+    action.resetForm();
+  };
   return (
     <div className={s.container}>
       <div className={s.wrapper}>
@@ -49,7 +41,7 @@ const LoginForm = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={loginSchema}
+          validationSchema={logInSchema}
           validateOnBlur={true}
         >
           <Form className={s.form}>
@@ -71,7 +63,7 @@ const LoginForm = () => {
             <label>
               <div className={s.passwordWrapper}>
                 <Field
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   className={s.input}
                   placeholder="Confirm a password"

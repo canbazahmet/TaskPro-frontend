@@ -1,61 +1,74 @@
-import { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import dayjs from "dayjs";
-import clsx from "clsx";
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import dayjs from 'dayjs';
+import clsx from 'clsx';
 
-import Button from "../Button/Button.jsx";
-import CustomDatePicker from "../CustomDatePicker/CustomDatePicker.jsx";
-import PriorityPicker from "../PriorityPicker/PriorityPicker.jsx";
+import Button from '../Button/Button.jsx';
+import CustomDatePicker from '../CustomDatePicker/CustomDatePicker.jsx';
+import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
 
-import { addCardSchema } from "../../helpers/addCardSchema.js";
-import { addTask } from "../../redux/tasks/tasksOperations.js";
-import { selectIsLoading } from "../../redux/tasks/tasksSelectors.js";
+import { addCardSchema } from '../../helpers/addCardSchema.js';
+import { addTask } from '../../redux/tasks/tasksOperations.js';
+import {
+  selectIsError,
+  selectIsLoading,
+} from '../../redux/tasks/tasksSelectors.js';
 
-import s from "./AddCard.module.css";
-import t from "../../styles/Forms.module.css";
+import s from './AddCard.module.css';
+import t from '../../styles/Forms.module.css';
 
 const AddCard = ({ boardId, columnId, onSuccess }) => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector(selectIsLoading);
+  const isError = useSelector(selectIsError);
+
+  const [formActions, setFormActions] = useState(null);
+
+  useEffect(() => {
+    if (formActions && !isLoading && !isError) {
+      formActions.resetForm();
+      setSelectedPriority('Without');
+      setSelectedDate(null);
+      setFormActions(null);
+
+      if (onSuccess) onSuccess();
+    }
+  }, [isLoading, isError, formActions, onSuccess]);
 
   const initialValues = {
-    title: "",
-    description: "",
-    priority: "Without",
+    title: '',
+    description: '',
+    priority: 'Without',
     deadline: null,
   };
 
-  const handleSubmit = useCallback(
-    async (values, actions) => {
-      if (!boardId || !columnId) {
-        actions.setSubmitting(false);
-        return;
-      }
+  const [selectedPriority, setSelectedPriority] = useState('Without');
+  const [selectedDate, setSelectedDate] = useState(null);
 
-      const task = {
-        title: values.title,
-        description: values.description,
-        priority: values.priority,
-        columnId,
-        boardId,
-      };
+  const handlePriorityChange = value => {
+    setSelectedPriority(value);
+  };
 
-      if (values.deadline) {
-        task.deadline = dayjs(values.deadline).toISOString();
-      }
+  const handleSubmit = (values, actions) => {
+    const task = {
+      ...values,
+      priority: selectedPriority,
+      columnId,
+      boardId,
+    };
 
-      try {
-        await dispatch(addTask(task)).unwrap();
-        actions.resetForm();
-        if (onSuccess) onSuccess();
-      } finally {
-        actions.setSubmitting(false);
-      }
-    },
-    [boardId, columnId, dispatch, onSuccess],
-  );
+    if (selectedDate) {
+      task.deadline = dayjs(selectedDate).toISOString();
+    } else {
+      delete task.deadline;
+    }
+
+    dispatch(addTask(task));
+
+    setFormActions(actions);
+  };
 
   return (
     <div className={s.wrapper}>
@@ -65,7 +78,7 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
         onSubmit={handleSubmit}
         validationSchema={addCardSchema}
       >
-        {({ values, setFieldValue }) => (
+        {({ setFieldValue }) => (
           <Form className={t.form}>
             <div className={t.fieldBox}>
               <Field name="title" className={t.input} placeholder="Title" />
@@ -91,17 +104,20 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
             <label className={s.label}>
               Label color
               <PriorityPicker
-                selectedValue={values.priority}
-                onChange={(value) => setFieldValue("priority", value)}
+                selectedValue={selectedPriority}
+                onChange={handlePriorityChange}
               />
             </label>
             <label className={clsx(s.label, s.labelDatePicker)}>
               Deadline
               <CustomDatePicker
-                value={values.deadline}
-                onChange={(date) => {
-                  const nextDate = date?.toDate ? date.toDate() : date;
-                  setFieldValue("deadline", nextDate || null);
+                value={selectedDate}
+                onChange={date => {
+                  setSelectedDate(date);
+                  setFieldValue(
+                    'deadline',
+                    date ? dayjs(date).format('YYYY-MM-DD') : null
+                  );
                 }}
                 disablePast
               />

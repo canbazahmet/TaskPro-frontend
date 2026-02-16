@@ -1,17 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useState, useRef, useCallback, useEffect } from "react";
-import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useState, useRef } from 'react';
+import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from 'react-icons/md';
 
-import ModalWrapper from "../ModalWrapper/ModalWrapper";
-import Button from "../Button/Button";
-import Icon from "../Icon/Icon";
+import ModalWrapper from '../ModalWrapper/ModalWrapper';
+import Button from '../Button/Button';
+import Icon from '../Icon/Icon';
 
-import { getUserThunk, updateUserThunk } from "../../redux/auth/authOperations";
-import { validationSchema } from "../../helpers/editUserSchema";
-import { selectIsLoading } from "../../redux/auth/authSelectors";
+import { getUserThunk, updateUserThunk } from '../../redux/auth/authOperations';
+import { validationSchema } from '../../helpers/editUserSchema';
+import { selectIsLoading } from '../../redux/auth/authSelectors';
 
-import s from "./EditProfile.module.css";
+import s from './EditProfile.module.css';
 
 const EditProfile = ({ open, onClose, user }) => {
   const dispatch = useDispatch();
@@ -23,62 +23,49 @@ const EditProfile = ({ open, onClose, user }) => {
 
   const isLoading = useSelector(selectIsLoading);
 
-  useEffect(() => {
-    setAvatarPreview(avatar);
-  }, [avatar]);
-
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     onClose();
-  }, [onClose]);
+  };
 
-  const handleAvatarChange = useCallback((event) => {
-    const file = event.target.files?.[0];
+  const handleAvatarChange = event => {
+    const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatarPreview(e.target?.result);
+      reader.onload = e => {
+        setAvatarPreview(e.target.result);
       };
       reader.readAsDataURL(file);
     }
-  }, []);
+  };
 
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  const handleSubmit = useCallback(
-    async (values, actions) => {
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("email", values.email);
-      if (values.password) {
-        formData.append("password", values.password);
-      }
-      if (fileInputRef.current?.files[0]) {
-        formData.append("avatar", fileInputRef.current.files[0]);
-      }
+  const handleSubmit = async values => {
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('email', values.email);
+    if (values.password) {
+      formData.append('password', values.password);
+    }
+    if (fileInputRef.current?.files[0]) {
+      formData.append('avatar', fileInputRef.current.files[0]);
+    }
 
-      try {
-        await dispatch(updateUserThunk(formData)).unwrap();
-        await dispatch(getUserThunk()).unwrap();
-        handleClose();
-        actions.resetForm();
-      } finally {
-        actions.setSubmitting(false);
-      }
-    },
-    [dispatch, handleClose],
-  );
+    await dispatch(updateUserThunk(formData));
+    await dispatch(getUserThunk());
+    handleClose();
+  };
 
   return (
     <ModalWrapper open={open} onClose={handleClose} className={s.modal}>
       <div className={s.container}>
         <h2 className={s.title}>Edit Profile</h2>
         <Formik
-          initialValues={{ name, email, password: "" }}
+          initialValues={{ name, email, password: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
-          enableReinitialize={true}
         >
           {({ isSubmitting }) => (
             <Form className={s.form}>
@@ -139,7 +126,7 @@ const EditProfile = ({ open, onClose, user }) => {
                 <div className={s.passwordWrapper}>
                   <Field
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your new password"
                     className={s.field}
                   />

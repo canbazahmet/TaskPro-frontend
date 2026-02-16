@@ -1,9 +1,8 @@
-import { memo } from "react";
-import { Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from '@mui/material';
 
-import Icon from "../Icon/Icon";
+import Icon from '../Icon/Icon';
 
-import s from "./MoveTaskMenu.module.css";
+import s from './MoveTaskMenu.module.css';
 
 const MoveTaskMenu = ({
   columns,
@@ -14,8 +13,8 @@ const MoveTaskMenu = ({
 }) => (
   <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
     {columns
-      .filter((column) => column._id !== taskToEdit?.columnId)
-      .map((column) => (
+      .filter(column => column._id !== taskToEdit?.columnId)
+      .map(column => (
         <MenuItem key={column._id} onClick={() => handleMoveTask(column._id)}>
           {column.title}
           <div className={s.iconBox}>
@@ -26,4 +25,4 @@ const MoveTaskMenu = ({
   </Menu>
 );
 
-export default memo(MoveTaskMenu);
+export default MoveTaskMenu;

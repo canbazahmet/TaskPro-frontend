@@ -1,18 +1,16 @@
-import { useDispatch } from "react-redux";
-import { useCallback } from "react";
+import { useDispatch } from 'react-redux';
 
-import Icon from "../../Icon/Icon.jsx";
-import { logOutThunk } from "../../../redux/auth/authOperations.js";
+import Icon from '../../Icon/Icon.jsx';
+import { logOutThunk } from '../../../redux/auth/authOperations.js';
 
-import s from "./Logout.module.css";
+import s from './Logout.module.css';
 
 const LogOut = () => {
   const dispatch = useDispatch();
 
-  const handleLogOut = useCallback(() => {
+  const handleLogOut = () => {
     dispatch(logOutThunk());
-  }, [dispatch]);
-
+  };
   return (
     <div className={s.sidedbarLogout}>
       <button className={s.logoutBtn} onClick={handleLogOut}>

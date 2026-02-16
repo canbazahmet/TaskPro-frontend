@@ -1,49 +1,43 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from 'react-icons/md';
 
-import Button from "../Button/Button";
+import Button from '../Button/Button';
 
-import { registerThunk } from "../../redux/auth/authOperations";
-import { registrationSchema } from "../../helpers/registrationSchema";
-import { selectIsLoading } from "../../redux/auth/authSelectors";
+import { registerThunk } from '../../redux/auth/authOperations';
+import { registrationSchema } from '../../helpers/registrationSchema';
+import { selectIsLoading } from '../../redux/auth/authSelectors';
 
-import s from "./RegisterForm.module.css";
+import s from './RegisterForm.module.css';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [checkStatus, setCheckStatus] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isLoading = useSelector(selectIsLoading);
 
   const initialValues = {
-    name: "",
-    email: "",
-    password: "",
+    name: '',
+    email: '',
+    password: '',
   };
 
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-  const handleSubmit = useCallback(
-    async (values, actions) => {
-      try {
-        await dispatch(registerThunk(values)).unwrap();
-        actions.resetForm();
-        navigate("/auth/login", { replace: true });
-      } finally {
-        actions.setSubmitting(false);
-      }
-    },
-    [dispatch, navigate],
-  );
+  const handleSubmit = async (values, action) => {
+    const response = await dispatch(registerThunk(values));
+    if (response.payload.status === 201) setCheckStatus(true);
+    action.resetForm();
+  };
 
   return (
     <div className={s.container}>
+      {checkStatus && <Navigate to="/auth/login" replace={true} />}
       <div className={s.wrapper}>
         <nav className={s.linkNav}>
           <Link to="/auth/register" className={s.registerLink}>
@@ -93,7 +87,7 @@ const RegisterForm = () => {
             <label>
               <div className={s.passwordWrapper}>
                 <Field
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   className={s.input}
                   placeholder="Create a password"
