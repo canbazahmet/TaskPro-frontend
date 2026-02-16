@@ -1,17 +1,16 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch, useSelector } from "react-redux";
 
-import Button from '../../Button/Button';
-import ModalWrapper from '../../ModalWrapper/ModalWrapper';
+import Button from "../../Button/Button";
+import ModalWrapper from "../../ModalWrapper/ModalWrapper";
 
-import { selectEmailLoading } from '../../../redux/emails/emailsSelectors';
-import { validationSchema } from '../../../helpers/emailSchema';
-import { sendEmail } from '../../../redux/auth/authOperations';
-import { clearStatus } from '../../../redux/emails/emailsSlice';
+import { selectEmailLoading } from "../../../redux/emails/emailsSelectors";
+import { validationSchema } from "../../../helpers/emailSchema";
+import { sendEmail } from "../../../redux/auth/authOperations";
+import { clearStatus } from "../../../redux/emails/emailsSlice";
 
-import st from './HelpForm.module.css';
-import s from '../../../styles/Forms.module.css';
+import st from "./HelpForm.module.css";
+import s from "../../../styles/Forms.module.css";
 
 const HelpForm = ({ open, onClose }) => {
   const dispatch = useDispatch();
@@ -19,21 +18,11 @@ const HelpForm = ({ open, onClose }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const res = await dispatch(sendEmail(values));
+      await dispatch(sendEmail(values)).unwrap();
       dispatch(clearStatus());
       resetForm();
       onClose();
-      return res.message;
-    } catch (error) {
-      toast.error(`${error.message}`, {
-        position: 'bottom-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    } catch (_error) {
       dispatch(clearStatus());
     } finally {
       setSubmitting(false);
@@ -53,7 +42,7 @@ const HelpForm = ({ open, onClose }) => {
       <div>
         <h2 className={st.HelpFormTitle}>Need help</h2>
         <Formik
-          initialValues={{ email: '', comment: '' }}
+          initialValues={{ email: "", comment: "" }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >

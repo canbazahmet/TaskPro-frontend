@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useCallback } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 
@@ -14,9 +14,9 @@ import s from "./RegisterForm.module.css";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [checkStatus, setCheckStatus] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isLoading = useSelector(selectIsLoading);
 
   const initialValues = {
@@ -30,20 +30,20 @@ const RegisterForm = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    (values, action) => {
-      dispatch(registerThunk(values)).then((result) => {
-        if (result.type === registerThunk.fulfilled.type) {
-          setCheckStatus(true);
-        }
-        action.resetForm();
-      });
+    async (values, actions) => {
+      try {
+        await dispatch(registerThunk(values)).unwrap();
+        actions.resetForm();
+        navigate("/auth/login", { replace: true });
+      } finally {
+        actions.setSubmitting(false);
+      }
     },
-    [dispatch],
+    [dispatch, navigate],
   );
 
   return (
     <div className={s.container}>
-      {checkStatus && <Navigate to="/auth/login" replace={true} />}
       <div className={s.wrapper}>
         <nav className={s.linkNav}>
           <Link to="/auth/register" className={s.registerLink}>

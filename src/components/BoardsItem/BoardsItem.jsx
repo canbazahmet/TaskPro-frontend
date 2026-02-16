@@ -4,7 +4,10 @@ import { useCallback } from "react";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 
-import { selectIsLoading, selectUser } from "../../redux/auth/authSelectors.js";
+import {
+  selectIsLoading,
+  selectUserBoards,
+} from "../../redux/auth/authSelectors.js";
 import Icon from "../Icon/Icon";
 import { deleteBoard } from "../../redux/board/boardOperations";
 import Modal from "../ModalWrapper/ModalWrapper";
@@ -22,7 +25,7 @@ const buildLinkClass = ({ isActive }) => {
 const BoardsItem = ({ title, id, icon, backgroundImage }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { boards } = useSelector(selectUser);
+  const boards = useSelector(selectUserBoards);
   const { open, handleClose, handleOpen } = useToggle();
 
   const isLoading = useSelector(selectIsLoading);

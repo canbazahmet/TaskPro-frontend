@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 
 import ModalWrapper from "../ModalWrapper/ModalWrapper";
@@ -23,6 +23,10 @@ const EditProfile = ({ open, onClose, user }) => {
 
   const isLoading = useSelector(selectIsLoading);
 
+  useEffect(() => {
+    setAvatarPreview(avatar);
+  }, [avatar]);
+
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -43,7 +47,7 @@ const EditProfile = ({ open, onClose, user }) => {
   }, []);
 
   const handleSubmit = useCallback(
-    async (values) => {
+    async (values, actions) => {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("email", values.email);
@@ -55,11 +59,12 @@ const EditProfile = ({ open, onClose, user }) => {
       }
 
       try {
-        await dispatch(updateUserThunk(formData));
-        await dispatch(getUserThunk());
+        await dispatch(updateUserThunk(formData)).unwrap();
+        await dispatch(getUserThunk()).unwrap();
         handleClose();
-      } catch (error) {
-        console.error("Error updating profile:", error);
+        actions.resetForm();
+      } finally {
+        actions.setSubmitting(false);
       }
     },
     [dispatch, handleClose],
@@ -73,6 +78,7 @@ const EditProfile = ({ open, onClose, user }) => {
           initialValues={{ name, email, password: "" }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
+          enableReinitialize={true}
         >
           {({ isSubmitting }) => (
             <Form className={s.form}>

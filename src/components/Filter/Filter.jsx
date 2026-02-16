@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import {
   Radio,
   RadioGroup,
@@ -10,21 +10,25 @@ import Modal from "../ModalWrapper/ModalWrapper.jsx";
 import { radioButtons, filterOptions } from "./radioButtons.js";
 
 import s from "./Filter.module.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setFilterType } from "../../redux/filter/filterSlice.js";
+import { selectFilterPriority } from "../../redux/filter/filterSelectors.js";
 
 const Filter = ({ open, handleClose }) => {
   const dispatch = useDispatch();
-  const [selectedValue, setSelectedValue] = useState("");
+  const filterType = useSelector(selectFilterPriority);
+
+  const selectedValue = useMemo(() => {
+    if (filterType === "All") return "";
+    const match = filterOptions.find((option) => option.filter === filterType);
+    return match?.value || "";
+  }, [filterType]);
 
   const handleChange = useCallback(
     (event) => {
       const value = event.target.value;
-      setSelectedValue(value);
-
-      const selectedFilter = filterOptions.find(
-        (obj) => obj.value === value,
-      ).filter;
+      const selectedOption = filterOptions.find((obj) => obj.value === value);
+      const selectedFilter = selectedOption?.filter;
 
       dispatch(
         setFilterType(selectedFilter !== undefined ? selectedFilter : "All"),

@@ -1,17 +1,15 @@
-import { useEffect, useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState, useCallback } from "react";
+import { useSelector } from "react-redux";
 
 import Icon from "../Icon/Icon";
 import HeaderTheme from "../HeaderTheme/HeaderTheme";
 import { selectUser } from "../../redux/auth/authSelectors";
-import { getUserThunk } from "../../redux/auth/authOperations";
 import { useScreenWidth } from "../../hooks/useScreenWidth";
 import EditProfile from "../EditProfile/EditProfile";
 
 import s from "./Header.module.css";
 
 const Header = ({ onBurgerClick }) => {
-  const dispatch = useDispatch();
   const user = useSelector(selectUser);
 
   const { isLargeScreen } = useScreenWidth();
@@ -20,16 +18,10 @@ const Header = ({ onBurgerClick }) => {
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
 
-  useEffect(() => {
-    if (!user.name) {
-      dispatch(getUserThunk());
-    }
-  }, [dispatch, user.name]);
-
   return (
     <header className={s.header}>
       {!isLargeScreen && (
-        <button onClick={() => onBurgerClick()}>
+        <button onClick={onBurgerClick}>
           <Icon name={"icon-menu"} className={s.menu_icon} />
         </button>
       )}

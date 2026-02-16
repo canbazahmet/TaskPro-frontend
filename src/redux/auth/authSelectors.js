@@ -1,11 +1,13 @@
-export const selectIsLoggedIn = state => state.auth.isLoggedIn;
+export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 
-export const selectUser = state => state.auth.user;
+export const selectUser = (state) => state.auth.user;
 
-export const selectIsRefreshing = state => state.auth.isRefreshing;
+export const selectUserBoards = (state) => state.auth.user.boards;
 
-export const selectTheme = state => state.auth.user.theme;
+export const selectIsRefreshing = (state) => state.auth.isRefreshing;
 
-export const selectIsLoading = state => state.auth.isLoading;
+export const selectTheme = (state) => state.auth.user.theme;
 
-export const selectIsSidebarOpen = state => state.auth.isSidebarOpen;
+export const selectIsLoading = (state) => state.auth.isLoading;
+
+export const selectIsSidebarOpen = (state) => state.auth.isSidebarOpen;

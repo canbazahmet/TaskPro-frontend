@@ -24,9 +24,13 @@ const LoginForm = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    (values, action) => {
-      dispatch(logInThunk(values));
-      action.resetForm();
+    async (values, actions) => {
+      try {
+        await dispatch(logInThunk(values)).unwrap();
+        actions.resetForm();
+      } finally {
+        actions.setSubmitting(false);
+      }
     },
     [dispatch],
   );

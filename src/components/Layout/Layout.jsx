@@ -6,7 +6,7 @@ import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
 import Loader from "../Loader/Loader";
 
-import { setIsSidebarOpen, setTheme } from "../../redux/auth/authSlice";
+import { setIsSidebarOpen } from "../../redux/auth/authSlice";
 import {
   selectIsSidebarOpen,
   selectTheme,
@@ -30,17 +30,21 @@ export const Layout = () => {
   );
 
   useEffect(() => {
-    dispatch(setTheme());
-  }, [dispatch]);
+    document.body.className = theme || "light";
+  }, [theme]);
 
   useEffect(() => {
+    if (!isSidebarOpen) return;
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [handleClickOutside]);
+  }, [handleClickOutside, isSidebarOpen]);
 
-  const onBurgerClick = () => dispatch(setIsSidebarOpen(!isSidebarOpen));
+  const onBurgerClick = useCallback(() => {
+    dispatch(setIsSidebarOpen(!isSidebarOpen));
+  }, [dispatch, isSidebarOpen]);
 
   return (
     <div className={s.page}>
