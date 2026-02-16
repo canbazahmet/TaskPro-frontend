@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 
-import { logInThunk } from "../../redux/auth/authOperations.js";
+import { logInThunk, getUserThunk } from "../../redux/auth/authOperations.js";
 import { loginSchema } from "../../helpers/loginSchema.js";
 import Button from "../Button/Button.jsx";
 import { selectIsLoading } from "../../redux/auth/authSelectors.js";
@@ -27,6 +27,7 @@ const LoginForm = () => {
     async (values, actions) => {
       try {
         await dispatch(logInThunk(values)).unwrap();
+        await dispatch(getUserThunk()).unwrap();
         actions.resetForm();
       } finally {
         actions.setSubmitting(false);
