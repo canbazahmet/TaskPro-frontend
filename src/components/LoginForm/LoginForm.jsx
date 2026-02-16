@@ -5,7 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 
 import { logInThunk } from "../../redux/auth/authOperations.js";
-import { logInSchema } from "../../helpers/logInSchema.js";
+import { loginSchema } from "../../helpers/loginSchema.js";
 import Button from "../Button/Button.jsx";
 import { selectIsLoading } from "../../redux/auth/authSelectors.js";
 
@@ -48,7 +48,7 @@ const LoginForm = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={logInSchema}
+          validationSchema={loginSchema}
           validateOnBlur={true}
         >
           <Form className={s.form}>

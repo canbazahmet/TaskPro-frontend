@@ -1,13 +1,13 @@
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
-export const logInSchema = Yup.object({
+export const loginSchema = Yup.object({
   email: Yup.string()
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      'Email is not valid!'
+      "Email is not valid!",
     )
-    .required('Email is required'),
+    .required("Email is required"),
   password: Yup.string()
-    .matches(/^[^\s]{8,64}$/, 'Password must contain from 8 to 64 characters')
-    .required('Password is required'),
+    .matches(/^[^\s]{8,64}$/, "Password must contain from 8 to 64 characters")
+    .required("Password is required"),
 });
