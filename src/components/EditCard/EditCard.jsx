@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import dayjs from 'dayjs';
-import clsx from 'clsx';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import dayjs from "dayjs";
+import clsx from "clsx";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 
-import Button from '../Button/Button.jsx';
-import CustomDatePicker from '../CustomDatePicker/CustomDatePicker.jsx';
-import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
+import Button from "../Button/Button.jsx";
+import CustomDatePicker from "../CustomDatePicker/CustomDatePicker.jsx";
+import PriorityPicker from "../PriorityPicker/PriorityPicker.jsx";
 
-import { addCardSchema } from '../../helpers/addCardSchema.js';
+import { addCardSchema } from "../../helpers/addCardSchema.js";
 import {
   selectCurrentTask,
   selectIsError,
   selectIsLoading,
-} from '../../redux/tasks/tasksSelectors.js';
-import { updateTask } from '../../redux/tasks/tasksOperations.js';
+} from "../../redux/tasks/tasksSelectors.js";
+import { updateTask } from "../../redux/tasks/tasksOperations.js";
 
-import s from '../AddCard/AddCard.module.css';
-import t from '../../styles/Forms.module.css';
+import s from "../AddCard/AddCard.module.css";
+import t from "../../styles/Forms.module.css";
 
 dayjs.extend(isSameOrAfter);
 
@@ -30,15 +30,20 @@ const EditCard = ({ onSuccess }) => {
   const card = useSelector(selectCurrentTask);
 
   const [formActions, setFormActions] = useState(null);
-  const [selectedPriority, setSelectedPriority] = useState(card.priority);
-  const [selectedDate, setSelectedDate] = useState(
-    card.deadline ? new Date(card.deadline) : null
-  );
+  const [selectedPriority, setSelectedPriority] = useState("Without");
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  useEffect(() => {
+    if (card) {
+      setSelectedPriority(card.priority || "Without");
+      setSelectedDate(card.deadline ? new Date(card.deadline) : null);
+    }
+  }, [card]);
 
   useEffect(() => {
     if (formActions && !isLoading && !isError) {
       formActions.resetForm();
-      setSelectedPriority('Without');
+      setSelectedPriority("Without");
       setSelectedDate(null);
       setFormActions(null);
 
@@ -46,43 +51,69 @@ const EditCard = ({ onSuccess }) => {
     }
   }, [isLoading, isError, formActions, onSuccess]);
 
-  const initialValues = {
-    title: card.title,
-    description: card.description,
-    priority: card.priority || 'none',
-    deadline: card.deadline ? new Date(card.deadline) : null,
-  };
-
-  const handlePriorityChange = value => {
-    setSelectedPriority(value);
-  };
-
-  const handleSubmit = (values, actions) => {
-    let updatedDeadline =
-      selectedDate && dayjs(selectedDate).isSameOrAfter(dayjs().startOf('day'))
-        ? dayjs(selectedDate).toISOString()
-        : null;
-
-    const task = {
-      ...values,
-      priority: selectedPriority,
-    };
-
-    if (updatedDeadline) {
-      task.deadline = updatedDeadline;
-    } else {
-      delete task.deadline;
+  const initialValues = useMemo(() => {
+    if (!card) {
+      return {
+        title: "",
+        description: "",
+        priority: "none",
+        deadline: null,
+      };
     }
+    return {
+      title: card.title || "",
+      description: card.description || "",
+      priority: card.priority || "none",
+      deadline: card.deadline ? new Date(card.deadline) : null,
+    };
+  }, [card]);
 
-    dispatch(
-      updateTask({
-        task,
-        id: card._id,
-      })
+  const handlePriorityChange = useCallback((value) => {
+    setSelectedPriority(value);
+  }, []);
+
+  const handleSubmit = useCallback(
+    (values, actions) => {
+      if (!card) return;
+
+      let updatedDeadline =
+        selectedDate &&
+        dayjs(selectedDate).isSameOrAfter(dayjs().startOf("day"))
+          ? dayjs(selectedDate).toISOString()
+          : null;
+
+      const task = {
+        ...values,
+        priority: selectedPriority,
+      };
+
+      if (updatedDeadline) {
+        task.deadline = updatedDeadline;
+      } else {
+        delete task.deadline;
+      }
+
+      dispatch(
+        updateTask({
+          task,
+          id: card._id,
+        }),
+      );
+
+      setFormActions(actions);
+    },
+    [selectedPriority, selectedDate, card, dispatch],
+  );
+
+  if (!card) {
+    return (
+      <div className={s.wrapper}>
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <p>Loading card data...</p>
+        </div>
+      </div>
     );
-
-    setFormActions(actions);
-  };
+  }
 
   return (
     <div className={s.wrapper}>
@@ -91,6 +122,7 @@ const EditCard = ({ onSuccess }) => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={addCardSchema}
+        enableReinitialize={true}
       >
         {({ setFieldValue }) => (
           <Form className={t.form}>
@@ -126,13 +158,13 @@ const EditCard = ({ onSuccess }) => {
               Deadline
               <CustomDatePicker
                 value={selectedDate}
-                onChange={date => {
+                onChange={(date) => {
                   const validDate =
-                    date && dayjs(date).isSameOrAfter(dayjs().startOf('day'))
+                    date && dayjs(date).isSameOrAfter(dayjs().startOf("day"))
                       ? date
                       : null;
                   setSelectedDate(validDate);
-                  setFieldValue('deadline', date ? new Date(date) : null);
+                  setFieldValue("deadline", date ? new Date(date) : null);
                 }}
                 disablePast
               />

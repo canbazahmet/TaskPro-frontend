@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useState, useCallback } from "react";
 
-import Icon from '../Icon/Icon';
-import flowerpot from '../../images/flowerpot.webp';
-import HelpForm from './HelpForm/HelpForm.jsx';
+import Icon from "../Icon/Icon";
+import flowerpot from "../../images/flowerpot.webp";
+import HelpForm from "./HelpForm/HelpForm.jsx";
 
-import s from '../NeedHelp/NeedHelp.module.css';
+import s from "../NeedHelp/NeedHelp.module.css";
 
 const NeedHelp = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), []);
 
   return (
     <>

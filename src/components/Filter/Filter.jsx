@@ -1,37 +1,41 @@
-import { useState } from 'react';
+import { useState, useCallback } from "react";
 import {
   Radio,
   RadioGroup,
   FormControlLabel,
   FormControl,
-} from '@mui/material';
-import clsx from 'clsx';
-import Modal from '../ModalWrapper/ModalWrapper.jsx';
-import { radioButtons, filterOptions } from './radioButtons.js';
+} from "@mui/material";
+import clsx from "clsx";
+import Modal from "../ModalWrapper/ModalWrapper.jsx";
+import { radioButtons, filterOptions } from "./radioButtons.js";
 
-import s from './Filter.module.css';
-import { useDispatch } from 'react-redux';
-import { setFilterType } from '../../redux/filter/filterSlice.js';
+import s from "./Filter.module.css";
+import { useDispatch } from "react-redux";
+import { setFilterType } from "../../redux/filter/filterSlice.js";
 
 const Filter = ({ open, handleClose }) => {
   const dispatch = useDispatch();
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState("");
 
-  const handleChange = event => {
-    setSelectedValue(event.target.value);
+  const handleChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      setSelectedValue(value);
 
-    const selectedFilter = filterOptions.find(
-      obj => obj.value === event.target.value
-    ).filter;
+      const selectedFilter = filterOptions.find(
+        (obj) => obj.value === value,
+      ).filter;
 
-    dispatch(
-      setFilterType(selectedFilter !== undefined ? selectedFilter : 'All')
-    );
-  };
+      dispatch(
+        setFilterType(selectedFilter !== undefined ? selectedFilter : "All"),
+      );
+    },
+    [dispatch],
+  );
 
-  const handleShowAll = () => {
-    dispatch(setFilterType('All'));
-  };
+  const handleShowAll = useCallback(() => {
+    dispatch(setFilterType("All"));
+  }, [dispatch]);
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -66,7 +70,7 @@ const Filter = ({ open, handleClose }) => {
                         s.radio,
                         selectedValue === value && s.checked,
                         s[`radio-${value}`],
-                        s[`radio-color-${value}`]
+                        s[`radio-color-${value}`],
                       ),
                     }}
                   />
@@ -75,7 +79,7 @@ const Filter = ({ open, handleClose }) => {
                 classes={{
                   root: clsx(
                     s.label,
-                    selectedValue === value && s['checked-label']
+                    selectedValue === value && s["checked-label"],
                   ),
                 }}
               />

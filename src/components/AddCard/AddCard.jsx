@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-import dayjs from 'dayjs';
-import clsx from 'clsx';
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import dayjs from "dayjs";
+import clsx from "clsx";
 
-import Button from '../Button/Button.jsx';
-import CustomDatePicker from '../CustomDatePicker/CustomDatePicker.jsx';
-import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
+import Button from "../Button/Button.jsx";
+import CustomDatePicker from "../CustomDatePicker/CustomDatePicker.jsx";
+import PriorityPicker from "../PriorityPicker/PriorityPicker.jsx";
 
-import { addCardSchema } from '../../helpers/addCardSchema.js';
-import { addTask } from '../../redux/tasks/tasksOperations.js';
+import { addCardSchema } from "../../helpers/addCardSchema.js";
+import { addTask } from "../../redux/tasks/tasksOperations.js";
 import {
   selectIsError,
   selectIsLoading,
-} from '../../redux/tasks/tasksSelectors.js';
+} from "../../redux/tasks/tasksSelectors.js";
 
-import s from './AddCard.module.css';
-import t from '../../styles/Forms.module.css';
+import s from "./AddCard.module.css";
+import t from "../../styles/Forms.module.css";
 
 const AddCard = ({ boardId, columnId, onSuccess }) => {
   const dispatch = useDispatch();
@@ -25,11 +25,23 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
   const isError = useSelector(selectIsError);
 
   const [formActions, setFormActions] = useState(null);
+  const [selectedPriority, setSelectedPriority] = useState("Without");
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const initialValues = useMemo(
+    () => ({
+      title: "",
+      description: "",
+      priority: "Without",
+      deadline: null,
+    }),
+    [],
+  );
 
   useEffect(() => {
     if (formActions && !isLoading && !isError) {
       formActions.resetForm();
-      setSelectedPriority('Without');
+      setSelectedPriority("Without");
       setSelectedDate(null);
       setFormActions(null);
 
@@ -37,38 +49,37 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
     }
   }, [isLoading, isError, formActions, onSuccess]);
 
-  const initialValues = {
-    title: '',
-    description: '',
-    priority: 'Without',
-    deadline: null,
-  };
-
-  const [selectedPriority, setSelectedPriority] = useState('Without');
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const handlePriorityChange = value => {
+  const handlePriorityChange = useCallback((value) => {
     setSelectedPriority(value);
-  };
+  }, []);
 
-  const handleSubmit = (values, actions) => {
-    const task = {
-      ...values,
-      priority: selectedPriority,
-      columnId,
-      boardId,
-    };
+  const handleSubmit = useCallback(
+    (values, actions) => {
+      const task = {
+        ...values,
+        priority: selectedPriority,
+        columnId,
+        boardId,
+      };
 
-    if (selectedDate) {
-      task.deadline = dayjs(selectedDate).toISOString();
-    } else {
-      delete task.deadline;
-    }
+      if (selectedDate) {
+        task.deadline = dayjs(selectedDate).toISOString();
+      } else {
+        delete task.deadline;
+      }
 
-    dispatch(addTask(task));
-
-    setFormActions(actions);
-  };
+      if (boardId && columnId) {
+        dispatch(addTask(task));
+        setFormActions(actions);
+      } else {
+        console.error("Cannot submit: missing boardId or columnId", {
+          boardId,
+          columnId,
+        });
+      }
+    },
+    [selectedPriority, selectedDate, columnId, boardId, dispatch],
+  );
 
   return (
     <div className={s.wrapper}>
@@ -112,11 +123,11 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
               Deadline
               <CustomDatePicker
                 value={selectedDate}
-                onChange={date => {
+                onChange={(date) => {
                   setSelectedDate(date);
                   setFieldValue(
-                    'deadline',
-                    date ? dayjs(date).format('YYYY-MM-DD') : null
+                    "deadline",
+                    date ? dayjs(date).format("YYYY-MM-DD") : null,
                   );
                 }}
                 disablePast

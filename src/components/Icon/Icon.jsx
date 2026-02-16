@@ -1,10 +1,12 @@
-import Icons from '../../../src/images/icons.svg';
+import { memo } from "react";
+import Icons from "../../../src/images/icons.svg";
 
-export const Icon = ({ name, ...props }) => {
+const Icon = ({ name, ...props }) => {
   return (
     <svg {...props}>
       <use href={`${Icons}#${name}`}></use>
     </svg>
   );
 };
-export default Icon;
+
+export default memo(Icon);

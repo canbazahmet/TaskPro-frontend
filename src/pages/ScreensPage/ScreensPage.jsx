@@ -1,20 +1,20 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useEffect, useCallback, useMemo } from "react";
 
-import HeaderDashboard from '../../components/HeaderDashboard/HeaderDashboard.jsx';
-import MainDashboard from '../../components/MainDashboard/MainDashboard.jsx';
-import { fetchBoard } from '../../redux/board/boardOperations';
+import HeaderDashboard from "../../components/HeaderDashboard/HeaderDashboard.jsx";
+import MainDashboard from "../../components/MainDashboard/MainDashboard.jsx";
+import { fetchBoard } from "../../redux/board/boardOperations";
 import {
   selectBoard,
   selectIsLoading,
-} from '../../redux/board/boardSelectors.js';
-import Images from '../../images/Image.js';
-import { useScreenWidth } from '../../hooks/useScreenWidth.js';
-import { selectFilterPriority } from '../../redux/filter/filterSelectors.js';
-import Loader from '../../components/Loader/Loader.jsx';
+} from "../../redux/board/boardSelectors.js";
+import Images from "../../images/Image.js";
+import { useScreenWidth } from "../../hooks/useScreenWidth.js";
+import { selectFilterPriority } from "../../redux/filter/filterSelectors.js";
+import Loader from "../../components/Loader/Loader.jsx";
 
-import s from './ScreensPage.module.css';
+import s from "./ScreensPage.module.css";
 
 const ScreensPage = () => {
   const board = useSelector(selectBoard);
@@ -27,11 +27,10 @@ const ScreensPage = () => {
     dispatch(fetchBoard({ id: boardId, priority }));
   }, [dispatch, boardId, priority]);
 
-  const backgroundImage = Images[board.backgroundImage];
-
   const { isSmallScreen, isMediumScreen, isLargeScreen } = useScreenWidth();
 
-  const getBackgroundImage = () => {
+  const getBackgroundImage = useCallback(() => {
+    const backgroundImage = Images[board.backgroundImage];
     if (!backgroundImage) return null;
 
     if (isSmallScreen) {
@@ -41,24 +40,29 @@ const ScreensPage = () => {
     } else if (isLargeScreen) {
       return backgroundImage.desktop;
     }
-  };
+  }, [board.backgroundImage, isSmallScreen, isMediumScreen, isLargeScreen]);
 
-  const selectedBackground = getBackgroundImage();
+  const selectedBackground = useMemo(
+    () => getBackgroundImage(),
+    [getBackgroundImage],
+  );
 
-  const style = selectedBackground
-    ? {
-        backgroundImage: `
-          image-set(
-            url(${selectedBackground.x1}) 1x,
-            url(${selectedBackground.x2}) 2x
-          )
-        `,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh',
-        width: '100%',
-      }
-    : {};
+  const style = useMemo(() => {
+    if (!selectedBackground) return {};
+
+    return {
+      backgroundImage: `
+        image-set(
+          url(${selectedBackground.x1}) 1x,
+          url(${selectedBackground.x2}) 2x
+        )
+      `,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      height: "100vh",
+      width: "100%",
+    };
+  }, [selectedBackground]);
 
   return isLoading ? (
     <div>

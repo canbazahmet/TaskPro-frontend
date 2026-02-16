@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Menu, MenuItem } from '@mui/material';
+import { useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Menu, MenuItem } from "@mui/material";
 
-import Icon from '../Icon/Icon';
-import { updateUserThemeThunk } from '../../redux/auth/authOperations';
-import { changeTheme } from '../../redux/auth/authSlice';
-import { selectTheme } from '../../redux/auth/authSelectors';
+import Icon from "../Icon/Icon";
+import { updateUserThemeThunk } from "../../redux/auth/authOperations";
+import { changeTheme } from "../../redux/auth/authSlice";
+import { selectTheme } from "../../redux/auth/authSelectors";
 
-import s from './HeaderTheme.module.css';
+import s from "./HeaderTheme.module.css";
 
 const HeaderTheme = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -15,31 +15,28 @@ const HeaderTheme = () => {
   const dispatch = useDispatch();
   const activeTheme = useSelector(selectTheme);
 
-  useEffect(() => {
-    return () => {
-      setAnchorEl(null);
-    };
+  const handleOpenMenu = useCallback((event) => {
+    setAnchorEl(event.currentTarget);
   }, []);
 
-  const handleOpenMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
+  const handleCloseMenu = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
-  const handleThemeChange = selectedTheme => {
-    dispatch(updateUserThemeThunk(selectedTheme));
-    dispatch(changeTheme(selectedTheme));
-    handleCloseMenu();
-  };
+  const handleThemeChange = useCallback(
+    (selectedTheme) => {
+      dispatch(updateUserThemeThunk(selectedTheme));
+      dispatch(changeTheme(selectedTheme));
+      handleCloseMenu();
+    },
+    [dispatch, handleCloseMenu],
+  );
 
   return (
     <div className={s.themeWrapper}>
       <div className={s.themeToggle} onClick={handleOpenMenu}>
         <span>Theme</span>
-        <Icon name={'icon-arrowDown'} className={s.arrowIcon} />
+        <Icon name={"icon-arrowDown"} className={s.arrowIcon} />
       </div>
 
       <Menu
@@ -49,23 +46,23 @@ const HeaderTheme = () => {
         disableAutoFocus
       >
         <MenuItem
-          className={activeTheme === 'light' ? s.activeItem : ''}
-          onClick={() => handleThemeChange('light')}
-          disabled={activeTheme === 'light'}
+          className={activeTheme === "light" ? s.activeItem : ""}
+          onClick={() => handleThemeChange("light")}
+          disabled={activeTheme === "light"}
         >
           Light
         </MenuItem>
         <MenuItem
-          className={activeTheme === 'dark' ? s.activeItem : ''}
-          onClick={() => handleThemeChange('dark')}
-          disabled={activeTheme === 'dark'}
+          className={activeTheme === "dark" ? s.activeItem : ""}
+          onClick={() => handleThemeChange("dark")}
+          disabled={activeTheme === "dark"}
         >
           Dark
         </MenuItem>
         <MenuItem
-          className={activeTheme === 'violet' ? s.activeItem : ''}
-          onClick={() => handleThemeChange('violet')}
-          disabled={activeTheme === 'violet'}
+          className={activeTheme === "violet" ? s.activeItem : ""}
+          onClick={() => handleThemeChange("violet")}
+          disabled={activeTheme === "violet"}
         >
           Violet
         </MenuItem>

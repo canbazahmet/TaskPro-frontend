@@ -1,23 +1,24 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useCallback } from "react";
 
-import Button from '../Button/Button';
+import Button from "../Button/Button";
 import {
   addColumn,
   updateColumn,
-} from '../../redux/columns/columnsOperations.js';
+} from "../../redux/columns/columnsOperations.js";
 
-import s from '../BoardForm/BoardForm.module.css';
-import t from '../../styles/Forms.module.css';
+import s from "../BoardForm/BoardForm.module.css";
+import t from "../../styles/Forms.module.css";
 
 const AddColumn = ({
-  title = '',
+  title = "",
   columnId = null,
   onClose,
-  formName = 'Add column',
-  buttonText = 'Add',
+  formName = "Add column",
+  buttonText = "Add",
 }) => {
   const dispatch = useDispatch();
   const { boardId } = useParams();
@@ -25,36 +26,39 @@ const AddColumn = ({
   const validationSchema = Yup.object().shape({
     title: Yup.string()
       .trim()
-      .min(3, 'The title must have at least 3 characters.')
-      .max(30, 'The title must not exceed 30 characters.')
-      .required('The title is required.'),
+      .min(3, "The title must have at least 3 characters.")
+      .max(30, "The title must not exceed 30 characters.")
+      .required("The title is required."),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    const trimmedTitle = values.title.trim();
+  const handleSubmit = useCallback(
+    (values, { setSubmitting }) => {
+      const trimmedTitle = values.title.trim();
 
-    if (trimmedTitle === '') {
-      setSubmitting(false);
-      return;
-    }
-
-    try {
-      if (columnId !== null) {
-        dispatch(updateColumn({ id: columnId, title: trimmedTitle }));
-      } else {
-        dispatch(addColumn({ boardId, title: trimmedTitle }));
+      if (trimmedTitle === "") {
+        setSubmitting(false);
+        return;
       }
-      onClose();
-    } catch (error) {
-      console.error('Error adding/updating column:', error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+
+      try {
+        if (columnId !== null) {
+          dispatch(updateColumn({ id: columnId, title: trimmedTitle }));
+        } else {
+          dispatch(addColumn({ boardId, title: trimmedTitle }));
+        }
+        onClose();
+      } catch (error) {
+        console.error("Error adding/updating column:", error);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    [columnId, boardId, dispatch, onClose],
+  );
 
   return (
     <div className={s.boardContainer}>
-      <h2 className={s.newBoardTitle} style={{ marginBottom: '24px' }}>
+      <h2 className={s.newBoardTitle} style={{ marginBottom: "24px" }}>
         {formName}
       </h2>
       <Formik
@@ -76,7 +80,7 @@ const AddColumn = ({
               text={buttonText}
               disabled={isSubmitting}
               showIcon={true}
-              style={{ marginTop: '24px' }}
+              style={{ marginTop: "24px" }}
             />
           </Form>
         )}

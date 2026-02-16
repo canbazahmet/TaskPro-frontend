@@ -1,57 +1,56 @@
-import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
-import Button from '../Button/Button.jsx';
-import Column from '../Column/Column.jsx';
-import Modal from '../ModalWrapper/ModalWrapper.jsx';
-import AddColumn from '../AddColumn/AddColumn.jsx';
+import Button from "../Button/Button.jsx";
+import Column from "../Column/Column.jsx";
+import Modal from "../ModalWrapper/ModalWrapper.jsx";
+import AddColumn from "../AddColumn/AddColumn.jsx";
 
-import { selectBoard } from '../../redux/board/boardSelectors.js';
-import { selectColumnsForBoard } from '../../redux/columns/columnsSelectors.js';
-import { useToggle } from '../../hooks/useToggle.js';
+import { selectBoard } from "../../redux/board/boardSelectors.js";
+import { selectColumnsForBoard } from "../../redux/columns/columnsSelectors.js";
+import { useToggle } from "../../hooks/useToggle.js";
 
-import s from './MainDashboard.module.css';
-import t from '../TasksList/TasksList.module.css';
+import s from "./MainDashboard.module.css";
+import t from "../TasksList/TasksList.module.css";
 
 export const MainDashboard = () => {
   const { open, handleOpen, handleClose } = useToggle();
 
   const board = useSelector(selectBoard);
-  const columns = useSelector(state => selectColumnsForBoard(state, board.id));
+  const columns = useSelector((state) =>
+    selectColumnsForBoard(state, board.id),
+  );
 
   const containerRef = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
+    if (!container) return;
 
-    if (container) {
-      const handleWheel = event => {
-        const isVerticalScrollTarget = event.target.closest(`.${t.taskItem}`);
+    const handleWheel = (event) => {
+      const isVerticalScrollTarget = event.target.closest(`.${t.taskItem}`);
+
+      if (isVerticalScrollTarget) {
         const targetElement = event.target.closest(`.${t.taskItem}`);
-
-        if (
-          targetElement &&
-          targetElement.scrollHeight > targetElement.clientHeight
-        ) {
-          if (isVerticalScrollTarget) {
-            return;
-          }
+        if (targetElement?.scrollHeight > targetElement?.clientHeight) {
+          return;
         }
-        event.preventDefault();
-        container.scrollLeft += event.deltaY;
-      };
+      }
 
-      container.addEventListener('wheel', handleWheel, { passive: false });
+      event.preventDefault();
+      container.scrollLeft += event.deltaY;
+    };
 
-      return () => {
-        container.removeEventListener('wheel', handleWheel);
-      };
-    }
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
   }, []);
 
   return (
-    <div className={s['columns-container']} ref={containerRef}>
-      {columns.map(column => (
+    <div className={s["columns-container"]} ref={containerRef}>
+      {columns.map((column) => (
         <Column key={column._id} column={column} />
       ))}
       <Button
