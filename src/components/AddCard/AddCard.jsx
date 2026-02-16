@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import dayjs from 'dayjs';
@@ -10,10 +10,7 @@ import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
 
 import { addCardSchema } from '../../helpers/addCardSchema.js';
 import { addTask } from '../../redux/tasks/tasksOperations.js';
-import {
-  selectIsError,
-  selectIsLoading,
-} from '../../redux/tasks/tasksSelectors.js';
+import { selectIsLoading } from '../../redux/tasks/tasksSelectors.js';
 
 import s from './AddCard.module.css';
 import t from '../../styles/Forms.module.css';
@@ -22,20 +19,6 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector(selectIsLoading);
-  const isError = useSelector(selectIsError);
-
-  const [formActions, setFormActions] = useState(null);
-
-  useEffect(() => {
-    if (formActions && !isLoading && !isError) {
-      formActions.resetForm();
-      setSelectedPriority('Without');
-      setSelectedDate(null);
-      setFormActions(null);
-
-      if (onSuccess) onSuccess();
-    }
-  }, [isLoading, isError, formActions, onSuccess]);
 
   const initialValues = {
     title: '',
@@ -65,9 +48,15 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
       delete task.deadline;
     }
 
-    dispatch(addTask(task));
-
-    setFormActions(actions);
+    dispatch(addTask(task))
+      .unwrap()
+      .then(() => {
+        actions.resetForm();
+        setSelectedPriority('Without');
+        setSelectedDate(null);
+        if (onSuccess) onSuccess();
+      })
+      .catch(() => {});
   };
 
   return (

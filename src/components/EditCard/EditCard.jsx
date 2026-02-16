@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import dayjs from 'dayjs';
@@ -12,7 +12,6 @@ import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
 import { addCardSchema } from '../../helpers/addCardSchema.js';
 import {
   selectCurrentTask,
-  selectIsError,
   selectIsLoading,
 } from '../../redux/tasks/tasksSelectors.js';
 import { updateTask } from '../../redux/tasks/tasksOperations.js';
@@ -26,25 +25,12 @@ const EditCard = ({ onSuccess }) => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector(selectIsLoading);
-  const isError = useSelector(selectIsError);
   const card = useSelector(selectCurrentTask);
 
-  const [formActions, setFormActions] = useState(null);
   const [selectedPriority, setSelectedPriority] = useState(card.priority);
   const [selectedDate, setSelectedDate] = useState(
     card.deadline ? new Date(card.deadline) : null
   );
-
-  useEffect(() => {
-    if (formActions && !isLoading && !isError) {
-      formActions.resetForm();
-      setSelectedPriority('Without');
-      setSelectedDate(null);
-      setFormActions(null);
-
-      if (onSuccess) onSuccess();
-    }
-  }, [isLoading, isError, formActions, onSuccess]);
 
   const initialValues = {
     title: card.title,
@@ -58,7 +44,7 @@ const EditCard = ({ onSuccess }) => {
   };
 
   const handleSubmit = (values, actions) => {
-    let updatedDeadline =
+    const updatedDeadline =
       selectedDate && dayjs(selectedDate).isSameOrAfter(dayjs().startOf('day'))
         ? dayjs(selectedDate).toISOString()
         : null;
@@ -79,9 +65,15 @@ const EditCard = ({ onSuccess }) => {
         task,
         id: card._id,
       })
-    );
-
-    setFormActions(actions);
+    )
+      .unwrap()
+      .then(() => {
+        actions.resetForm();
+        setSelectedPriority('Without');
+        setSelectedDate(null);
+        if (onSuccess) onSuccess();
+      })
+      .catch(() => {});
   };
 
   return (
