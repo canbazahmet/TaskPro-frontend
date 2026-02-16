@@ -44,6 +44,7 @@ const EditCard = ({ onSuccess }) => {
   };
 
   const handleSubmit = (values, actions) => {
+    const apiPriority = selectedPriority.toLowerCase();
     const updatedDeadline =
       selectedDate && dayjs(selectedDate).isSameOrAfter(dayjs().startOf('day'))
         ? dayjs(selectedDate).toISOString()
@@ -51,7 +52,8 @@ const EditCard = ({ onSuccess }) => {
 
     const task = {
       ...values,
-      priority: selectedPriority,
+      priority: apiPriority,
+      columnId: card.columnId,
     };
 
     if (updatedDeadline) {

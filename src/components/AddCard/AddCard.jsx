@@ -35,9 +35,10 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
   };
 
   const handleSubmit = (values, actions) => {
+    const apiPriority = selectedPriority.toLowerCase();
     const task = {
       ...values,
-      priority: selectedPriority,
+      priority: apiPriority,
       columnId,
       boardId,
     };
