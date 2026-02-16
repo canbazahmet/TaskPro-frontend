@@ -5,7 +5,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { MdOutlineRemoveRedEye, MdOutlineVisibilityOff } from "react-icons/md";
 
 import { logInThunk, getUserThunk } from "../../redux/auth/authOperations.js";
-import { loginSchema } from "../../helpers/loginSchema.js";
+import { loginSchema } from "../../helpers/logInSchema.js";
 import Button from "../Button/Button.jsx";
 import { selectIsLoading } from "../../redux/auth/authSelectors.js";
 
