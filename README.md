@@ -5,8 +5,7 @@ This repository contains the frontend portion of the application.
 
 ## 🌐 Live Site
 
-<a href="https://task-pro-frontend-alpha.vercel.app/" target="_blank">Visit
-TaskPro Live</a>
+[Visit TaskPro Live](https://task-pro-frontend-alpha.vercel.app/)
 
 ## 📋 Project Features
 
