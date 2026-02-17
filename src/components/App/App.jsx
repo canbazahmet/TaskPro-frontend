@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 import { PublicRoute } from '../PublicRoute';
 import { PrivateRoute } from '../PrivateRoute';
@@ -11,6 +12,7 @@ import Loader from '../Loader/Loader';
 import {
   selectIsRefreshing,
   selectTheme,
+  selectToken,
 } from '../../redux/auth/authSelectors';
 
 const Layout = lazy(() => import('../Layout/Layout'));
@@ -26,11 +28,17 @@ const App = () => {
   const dispatch = useDispatch();
   const isRefreshing = useSelector(selectIsRefreshing);
   const theme = useSelector(selectTheme);
+  const token = useSelector(selectToken);
   const toastTheme = theme === 'violet' ? 'light' : theme;
 
   useEffect(() => {
-    dispatch(getUserThunk());
-  }, [dispatch]);
+    // Set auth header when token becomes available from localStorage
+    if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      // Only call getUserThunk after auth header is set
+      dispatch(getUserThunk());
+    }
+  }, [token, dispatch]);
 
   return isRefreshing ? (
     <div>

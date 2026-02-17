@@ -138,7 +138,9 @@ export const sendEmail = createAsyncThunk(
     const persistedToken = state.auth.token;
 
     if (!persistedToken) {
-      return thunkAPI.rejectWithValue('Unable to fetch user');
+      return thunkAPI.rejectWithValue(
+        'Not authenticated. Please log in again.'
+      );
     }
     try {
       setAuthHeader(persistedToken);
@@ -150,10 +152,34 @@ export const sendEmail = createAsyncThunk(
       showToast('Message sent successfully!', 'success');
       return data;
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        'Failed to send email';
+      let errorMessage = 'Failed to send email';
+
+      if (error.response) {
+        // Backend returned an error response
+        console.error('Backend error response:', {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          data: error.response.data,
+        });
+        errorMessage =
+          error.response.data?.message ||
+          error.response.statusText ||
+          'Server error';
+      } else if (error.request) {
+        // Request made but no response received
+        console.error('No response from server:', error.request);
+        errorMessage = 'No response from server. Please check your connection.';
+      } else {
+        // Error in request setup
+        console.error('Request setup error:', error.message);
+        errorMessage = error.message;
+      }
+
+      console.error('Email send error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: errorMessage,
+      });
       showToast(`${errorMessage}. Please try again.`, 'error');
       return thunkAPI.rejectWithValue(errorMessage);
     }
