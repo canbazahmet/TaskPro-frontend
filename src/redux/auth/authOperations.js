@@ -142,13 +142,20 @@ export const sendEmail = createAsyncThunk(
     }
     try {
       setAuthHeader(persistedToken);
-      const { data } = await axios.post('/help/send-email', credentials);
+      const { data } = await axios.post('/help/send-email', {
+        email: credentials.email,
+        comment: credentials.comment,
+      });
 
       showToast('Message sent successfully!', 'success');
       return data;
     } catch (error) {
-      showToast(`${error.message} Message was not sent, please retry`, 'error');
-      return thunkAPI.rejectWithValue(error.message);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        'Failed to send email';
+      showToast(`${errorMessage}. Please try again.`, 'error');
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );

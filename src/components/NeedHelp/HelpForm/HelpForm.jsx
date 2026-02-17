@@ -1,6 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import Button from '../../Button/Button';
 import ModalWrapper from '../../ModalWrapper/ModalWrapper';
@@ -19,21 +18,14 @@ const HelpForm = ({ open, onClose }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const res = await dispatch(sendEmail(values));
+      const result = await dispatch(sendEmail(values)).unwrap();
       dispatch(clearStatus());
       resetForm();
       onClose();
-      return res.message;
+      return result.message;
     } catch (error) {
-      toast.error(`${error.message}`, {
-        position: 'bottom-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      console.error('Email sending failed:', error);
+      // Error toast is already shown by sendEmail thunk
       dispatch(clearStatus());
     } finally {
       setSubmitting(false);
