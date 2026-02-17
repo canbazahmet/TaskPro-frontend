@@ -43,7 +43,7 @@ export const updateTask = createAsyncThunk(
     try {
       const { data } = await axios.patch(`/tasks/${id}`, task);
       showToast('Task updated successfully!', 'success');
-      return data.data.data;
+      return data.data;
     } catch (error) {
       showToast(
         'Unable to update the task. Please check the details and try again.',

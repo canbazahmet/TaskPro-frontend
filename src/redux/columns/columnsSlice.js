@@ -72,6 +72,8 @@ const slice = createSlice({
         }
       })
       .addCase(updateTask.fulfilled, (state, action) => {
+        if (!action.payload) return;
+
         const { _id: taskId, columnId: newColumnId } = action.payload;
 
         const oldColumn = state.columns.find(col =>

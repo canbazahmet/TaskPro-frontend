@@ -9,7 +9,6 @@
   padding: 20px 24px;
   justify-content: space-between;
   position: relative;
-
   & button {
     display: none;
   }

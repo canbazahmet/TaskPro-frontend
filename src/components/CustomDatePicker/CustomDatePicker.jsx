@@ -16,8 +16,15 @@ const CustomDatePicker = ({ value, onChange, disablePast = false }) => {
   };
 
   const handleFocus = e => {
-    e.target.select();
-    e.target.setSelectionRange(0, 0);
+    // Only call select if it exists (for actual input elements)
+    if (e.target && typeof e.target.select === 'function') {
+      try {
+        e.target.select();
+        e.target.setSelectionRange(0, 0);
+      } catch (_error) {
+        // Ignore errors if selection is not supported
+      }
+    }
   };
 
   return (

@@ -13,8 +13,8 @@ import { addCardSchema } from '../../helpers/addCardSchema.js';
 import { selectCurrentTask } from '../../redux/tasks/tasksSelectors.js';
 import { selectBoard } from '../../redux/board/boardSelectors.js';
 import { updateTask } from '../../redux/tasks/tasksOperations.js';
+import { setCurrentTask } from '../../redux/tasks/tasksSlice.js';
 import { fetchBoard } from '../../redux/board/boardOperations.js';
-import { selectFilterPriority } from '../../redux/filter/filterSelectors.js';
 
 import s from '../AddCard/AddCard.module.css';
 import t from '../../styles/Forms.module.css';
@@ -26,26 +26,27 @@ const EditCard = ({ onSuccess }) => {
 
   const card = useSelector(selectCurrentTask);
   const board = useSelector(selectBoard);
-  const priority = useSelector(selectFilterPriority);
 
-  const [selectedPriority, setSelectedPriority] = useState(card.priority);
+  const [selectedPriority, setSelectedPriority] = useState(
+    card?.priority || 'Without'
+  );
   const [selectedDate, setSelectedDate] = useState(
-    card.deadline ? new Date(card.deadline) : null
+    card?.deadline ? new Date(card.deadline) : null
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialValues = {
-    title: card.title,
-    description: card.description,
-    priority: card.priority || 'none',
-    deadline: card.deadline ? new Date(card.deadline) : null,
+    title: card?.title || '',
+    description: card?.description || '',
+    priority: card?.priority || 'Without',
+    deadline: card?.deadline ? new Date(card.deadline) : null,
   };
 
   const handlePriorityChange = value => {
     setSelectedPriority(value);
   };
 
-  const handleSubmit = (values, actions) => {
+  const handleSubmit = (_values, _actions) => {
     setIsSubmitting(true);
     const updatedDeadline =
       selectedDate && dayjs(selectedDate).isSameOrAfter(dayjs().startOf('day'))
@@ -53,15 +54,14 @@ const EditCard = ({ onSuccess }) => {
         : null;
 
     const task = {
-      ...values,
+      title: _values.title,
+      description: _values.description,
       priority: selectedPriority,
       columnId: card.columnId,
     };
 
     if (updatedDeadline) {
       task.deadline = updatedDeadline;
-    } else {
-      delete task.deadline;
     }
 
     dispatch(
@@ -72,13 +72,13 @@ const EditCard = ({ onSuccess }) => {
     )
       .unwrap()
       .then(() => {
-        return dispatch(fetchBoard({ id: board._id, priority }));
+        // Refetch board to update Redux with fresh data
+        return dispatch(fetchBoard({ id: board.id }));
       })
       .then(() => {
         setIsSubmitting(false);
-        actions.resetForm();
-        setSelectedPriority('Without');
-        setSelectedDate(null);
+        // Clear current task and close modal
+        dispatch(setCurrentTask(null));
         if (onSuccess) onSuccess();
       })
       .catch(() => {
@@ -90,6 +90,7 @@ const EditCard = ({ onSuccess }) => {
     <div className={s.wrapper}>
       <h3 className={s.title}>Edit card</h3>
       <Formik
+        enableReinitialize={true}
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={addCardSchema}

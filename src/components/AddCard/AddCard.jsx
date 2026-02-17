@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import dayjs from 'dayjs';
 import clsx from 'clsx';
@@ -11,15 +11,12 @@ import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
 import { addCardSchema } from '../../helpers/addCardSchema.js';
 import { addTask } from '../../redux/tasks/tasksOperations.js';
 import { fetchBoard } from '../../redux/board/boardOperations.js';
-import { selectFilterPriority } from '../../redux/filter/filterSelectors.js';
 
 import s from './AddCard.module.css';
 import t from '../../styles/Forms.module.css';
 
 const AddCard = ({ boardId, columnId, onSuccess }) => {
   const dispatch = useDispatch();
-
-  const priority = useSelector(selectFilterPriority);
 
   const initialValues = {
     title: '',
@@ -54,7 +51,8 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
     dispatch(addTask(task))
       .unwrap()
       .then(() => {
-        return dispatch(fetchBoard({ id: boardId, priority }));
+        // Refetch board WITHOUT priority filter to show all tasks
+        return dispatch(fetchBoard({ id: boardId }));
       })
       .then(() => {
         setIsSubmitting(false);

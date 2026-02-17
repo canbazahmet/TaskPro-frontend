@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 
@@ -12,7 +12,6 @@ import { deleteTask, updateTask } from '../../redux/tasks/tasksOperations';
 import { setCurrentTask } from '../../redux/tasks/tasksSlice';
 import { selectColumnsForBoard } from '../../redux/columns/columnsSelectors';
 import { fetchBoard } from '../../redux/board/boardOperations';
-import { selectFilterPriority } from '../../redux/filter/filterSelectors';
 
 import s from './TaskItem.module.css';
 
@@ -21,30 +20,80 @@ const TaskItem = ({ tasks, boardId }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [loadingTaskId, setLoadingTaskId] = useState(null);
+  const anchorRef = useRef(null);
 
   const dispatch = useDispatch();
   const columns = useSelector(state => selectColumnsForBoard(state, boardId));
-  const priority = useSelector(selectFilterPriority);
+
+  // Validate anchor element with callback
+  const setValidAnchor = useCallback(element => {
+    if (element && element.ownerDocument?.documentElement?.contains(element)) {
+      anchorRef.current = element;
+      setAnchorEl(element);
+    } else {
+      anchorRef.current = null;
+      setAnchorEl(null);
+    }
+  }, []);
 
   useEffect(() => {
     return () => {
+      anchorRef.current = null;
       setAnchorEl(null);
     };
   }, []);
 
+  // Clean up stale anchorEl references
+  useEffect(() => {
+    if (!anchorEl || !anchorRef.current) return;
+
+    const checkAndCleanup = () => {
+      const isAttached =
+        anchorRef.current?.ownerDocument?.documentElement?.contains(
+          anchorRef.current
+        );
+      if (!isAttached) {
+        anchorRef.current = null;
+        setAnchorEl(null);
+        setTaskToEdit(null);
+      }
+    };
+
+    // Use RAF to avoid setState in effect
+    const rafId = requestAnimationFrame(checkAndCleanup);
+    return () => cancelAnimationFrame(rafId);
+  }, [anchorEl, isModalOpen]);
+
   const handleOpenModal = taskCard => {
+    handleCloseMenu(); // Close move menu if open
     dispatch(setCurrentTask(taskCard));
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => setIsModalOpen(false);
+  const handleCloseModal = () => {
+    handleCloseMenu(); // Close move menu if open
+    setIsModalOpen(false);
+  };
 
   const handleOpenMenu = (event, task) => {
-    setAnchorEl(event.currentTarget);
-    setTaskToEdit(task);
+    event.preventDefault();
+    event.stopPropagation();
+    const element = event.currentTarget;
+    // Store in ref immediately
+    anchorRef.current = element;
+    // Use double RAF to ensure DOM is completely stable
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (anchorRef.current && anchorRef.current === element) {
+          setValidAnchor(element);
+          setTaskToEdit(task);
+        }
+      });
+    });
   };
 
   const handleCloseMenu = () => {
+    anchorRef.current = null;
     setAnchorEl(null);
     setTaskToEdit(null);
   };
@@ -62,7 +111,8 @@ const TaskItem = ({ tasks, boardId }) => {
     )
       .unwrap()
       .then(() => {
-        return dispatch(fetchBoard({ id: boardId, priority }));
+        // Refetch board WITHOUT priority filter to show all tasks
+        return dispatch(fetchBoard({ id: boardId }));
       })
       .then(() => {
         handleCloseMenu();
@@ -80,7 +130,8 @@ const TaskItem = ({ tasks, boardId }) => {
     )
       .unwrap()
       .then(() => {
-        return dispatch(fetchBoard({ id: boardId, priority }));
+        // Refetch board WITHOUT priority filter to show all tasks
+        return dispatch(fetchBoard({ id: boardId }));
       })
       .then(() => {
         setLoadingTaskId(null);
@@ -177,13 +228,15 @@ const TaskItem = ({ tasks, boardId }) => {
       <ModalWrapper open={isModalOpen} onClose={handleCloseModal}>
         <EditCard onSuccess={handleCloseModal} />
       </ModalWrapper>
-      <MoveTaskMenu
-        columns={columns}
-        anchorEl={anchorEl}
-        taskToEdit={taskToEdit}
-        handleCloseMenu={handleCloseMenu}
-        handleMoveTask={handleMoveTask}
-      />
+      {anchorEl && !isModalOpen && (
+        <MoveTaskMenu
+          columns={columns}
+          anchorEl={anchorEl}
+          taskToEdit={taskToEdit}
+          handleCloseMenu={handleCloseMenu}
+          handleMoveTask={handleMoveTask}
+        />
+      )}
     </>
   );
 };
