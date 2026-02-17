@@ -11,6 +11,7 @@ import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
 import { addCardSchema } from '../../helpers/addCardSchema.js';
 import { addTask } from '../../redux/tasks/tasksOperations.js';
 import { selectIsLoading } from '../../redux/tasks/tasksSelectors.js';
+import { fetchBoard } from '../../redux/board/boardOperations.js';
 
 import s from './AddCard.module.css';
 import t from '../../styles/Forms.module.css';
@@ -51,6 +52,7 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
     dispatch(addTask(task))
       .unwrap()
       .then(() => {
+        dispatch(fetchBoard({ id: boardId }));
         actions.resetForm();
         setSelectedPriority('Without');
         setSelectedDate(null);

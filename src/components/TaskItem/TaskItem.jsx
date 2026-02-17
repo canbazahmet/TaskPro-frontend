@@ -11,6 +11,7 @@ import IconButton from '../IconButton/IconButton';
 import { deleteTask, updateTask } from '../../redux/tasks/tasksOperations';
 import { setCurrentTask } from '../../redux/tasks/tasksSlice';
 import { selectColumnsForBoard } from '../../redux/columns/columnsSelectors';
+import { fetchBoard } from '../../redux/board/boardOperations';
 
 import s from './TaskItem.module.css';
 
@@ -56,9 +57,10 @@ const TaskItem = ({ tasks, boardId }) => {
         task,
         id: taskToEdit._id,
       })
-    );
-
-    handleCloseMenu();
+    ).then(() => {
+      dispatch(fetchBoard({ id: boardId }));
+      handleCloseMenu();
+    });
   };
 
   const handleDeleteTask = taskCard => {
@@ -68,9 +70,14 @@ const TaskItem = ({ tasks, boardId }) => {
         id: taskCard._id,
         columnId: taskCard.columnId,
       })
-    ).finally(() => {
-      setLoadingTaskId(null);
-    });
+    )
+      .then(() => {
+        dispatch(fetchBoard({ id: boardId }));
+        setLoadingTaskId(null);
+      })
+      .catch(() => {
+        setLoadingTaskId(null);
+      });
   };
 
   const taskArr = tasks;

@@ -14,7 +14,9 @@ import {
   selectCurrentTask,
   selectIsLoading,
 } from '../../redux/tasks/tasksSelectors.js';
+import { selectBoard } from '../../redux/board/boardSelectors.js';
 import { updateTask } from '../../redux/tasks/tasksOperations.js';
+import { fetchBoard } from '../../redux/board/boardOperations.js';
 
 import s from '../AddCard/AddCard.module.css';
 import t from '../../styles/Forms.module.css';
@@ -26,6 +28,7 @@ const EditCard = ({ onSuccess }) => {
 
   const isLoading = useSelector(selectIsLoading);
   const card = useSelector(selectCurrentTask);
+  const board = useSelector(selectBoard);
 
   const [selectedPriority, setSelectedPriority] = useState(card.priority);
   const [selectedDate, setSelectedDate] = useState(
@@ -69,6 +72,7 @@ const EditCard = ({ onSuccess }) => {
     )
       .unwrap()
       .then(() => {
+        dispatch(fetchBoard({ id: board._id }));
         actions.resetForm();
         setSelectedPriority('Without');
         setSelectedDate(null);
