@@ -8,10 +8,7 @@ export const addCardSchema = Yup.object({
     .max(300, 'A maximum of 300 characters is allowed')
     .required('Description is required'),
   priority: Yup.mixed()
-    .oneOf(
-      ['Without', 'Low', 'Medium', 'High', 'without', 'low', 'medium', 'high'],
-      'Invalid priority'
-    )
+    .oneOf(['Without', 'Low', 'Medium', 'High'], 'Invalid priority')
     .required('Priority is required'),
   deadline: Yup.date()
     .nullable()
