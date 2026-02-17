@@ -34,6 +34,7 @@ const EditCard = ({ onSuccess }) => {
   const [selectedDate, setSelectedDate] = useState(
     card.deadline ? new Date(card.deadline) : null
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialValues = {
     title: card.title,
@@ -47,6 +48,7 @@ const EditCard = ({ onSuccess }) => {
   };
 
   const handleSubmit = (values, actions) => {
+    setIsSubmitting(true);
     const updatedDeadline =
       selectedDate && dayjs(selectedDate).isSameOrAfter(dayjs().startOf('day'))
         ? dayjs(selectedDate).toISOString()
@@ -75,12 +77,15 @@ const EditCard = ({ onSuccess }) => {
         return dispatch(fetchBoard({ id: board._id }));
       })
       .then(() => {
+        setIsSubmitting(false);
         actions.resetForm();
         setSelectedPriority('Without');
         setSelectedDate(null);
         if (onSuccess) onSuccess();
       })
-      .catch(() => {});
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -137,7 +142,12 @@ const EditCard = ({ onSuccess }) => {
               />
             </label>
 
-            <Button text="Edit" showIcon type="submit" isLoading={isLoading} />
+            <Button
+              text="Edit"
+              showIcon
+              type="submit"
+              isLoading={isSubmitting}
+            />
           </Form>
         )}
       </Formik>

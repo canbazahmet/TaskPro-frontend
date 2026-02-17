@@ -30,12 +30,14 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
 
   const [selectedPriority, setSelectedPriority] = useState('Without');
   const [selectedDate, setSelectedDate] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePriorityChange = value => {
     setSelectedPriority(value);
   };
 
   const handleSubmit = (values, actions) => {
+    setIsSubmitting(true);
     const task = {
       ...values,
       priority: selectedPriority,
@@ -55,12 +57,15 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
         return dispatch(fetchBoard({ id: boardId }));
       })
       .then(() => {
+        setIsSubmitting(false);
         actions.resetForm();
         setSelectedPriority('Without');
         setSelectedDate(null);
         if (onSuccess) onSuccess();
       })
-      .catch(() => {});
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -116,7 +121,12 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
               />
             </label>
 
-            <Button text="Add" showIcon type="submit" isLoading={isLoading} />
+            <Button
+              text="Add"
+              showIcon
+              type="submit"
+              isLoading={isSubmitting}
+            />
           </Form>
         )}
       </Formik>
