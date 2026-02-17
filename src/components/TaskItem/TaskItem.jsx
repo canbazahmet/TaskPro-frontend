@@ -57,10 +57,13 @@ const TaskItem = ({ tasks, boardId }) => {
         task,
         id: taskToEdit._id,
       })
-    ).then(() => {
-      dispatch(fetchBoard({ id: boardId }));
-      handleCloseMenu();
-    });
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(fetchBoard({ id: boardId }));
+        handleCloseMenu();
+      })
+      .catch(() => {});
   };
 
   const handleDeleteTask = taskCard => {
@@ -71,6 +74,7 @@ const TaskItem = ({ tasks, boardId }) => {
         columnId: taskCard.columnId,
       })
     )
+      .unwrap()
       .then(() => {
         dispatch(fetchBoard({ id: boardId }));
         setLoadingTaskId(null);
