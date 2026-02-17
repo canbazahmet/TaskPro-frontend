@@ -42,34 +42,41 @@ const HeaderTheme = () => {
         <Icon name={'icon-arrowDown'} className={s.arrowIcon} />
       </div>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-        disableAutoFocus
-      >
-        <MenuItem
-          className={activeTheme === 'light' ? s.activeItem : ''}
-          onClick={() => handleThemeChange('light')}
-          disabled={activeTheme === 'light'}
+      {anchorEl && (
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseMenu}
+          disableAutoFocus
+          disableEnforceFocus
+          disableRestoreFocus
+          keepMounted={false}
+          slotProps={{
+            paper: {
+              onMouseDown: e => e.preventDefault(),
+            },
+          }}
         >
-          Light
-        </MenuItem>
-        <MenuItem
-          className={activeTheme === 'dark' ? s.activeItem : ''}
-          onClick={() => handleThemeChange('dark')}
-          disabled={activeTheme === 'dark'}
-        >
-          Dark
-        </MenuItem>
-        <MenuItem
-          className={activeTheme === 'violet' ? s.activeItem : ''}
-          onClick={() => handleThemeChange('violet')}
-          disabled={activeTheme === 'violet'}
-        >
-          Violet
-        </MenuItem>
-      </Menu>
+          <MenuItem
+            className={activeTheme === 'light' ? s.activeItem : ''}
+            onClick={() => handleThemeChange('light')}
+          >
+            Light
+          </MenuItem>
+          <MenuItem
+            className={activeTheme === 'dark' ? s.activeItem : ''}
+            onClick={() => handleThemeChange('dark')}
+          >
+            Dark
+          </MenuItem>
+          <MenuItem
+            className={activeTheme === 'violet' ? s.activeItem : ''}
+            onClick={() => handleThemeChange('violet')}
+          >
+            Violet
+          </MenuItem>
+        </Menu>
+      )}
     </div>
   );
 };
