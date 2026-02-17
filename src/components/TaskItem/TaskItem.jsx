@@ -60,7 +60,9 @@ const TaskItem = ({ tasks, boardId }) => {
     )
       .unwrap()
       .then(() => {
-        dispatch(fetchBoard({ id: boardId }));
+        return dispatch(fetchBoard({ id: boardId }));
+      })
+      .then(() => {
         handleCloseMenu();
       })
       .catch(() => {});
@@ -76,7 +78,9 @@ const TaskItem = ({ tasks, boardId }) => {
     )
       .unwrap()
       .then(() => {
-        dispatch(fetchBoard({ id: boardId }));
+        return dispatch(fetchBoard({ id: boardId }));
+      })
+      .then(() => {
         setLoadingTaskId(null);
       })
       .catch(() => {

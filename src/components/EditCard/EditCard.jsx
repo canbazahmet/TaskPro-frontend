@@ -72,7 +72,9 @@ const EditCard = ({ onSuccess }) => {
     )
       .unwrap()
       .then(() => {
-        dispatch(fetchBoard({ id: board._id }));
+        return dispatch(fetchBoard({ id: board._id }));
+      })
+      .then(() => {
         actions.resetForm();
         setSelectedPriority('Without');
         setSelectedDate(null);

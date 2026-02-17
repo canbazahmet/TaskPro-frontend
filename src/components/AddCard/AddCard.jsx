@@ -52,7 +52,9 @@ const AddCard = ({ boardId, columnId, onSuccess }) => {
     dispatch(addTask(task))
       .unwrap()
       .then(() => {
-        dispatch(fetchBoard({ id: boardId }));
+        return dispatch(fetchBoard({ id: boardId }));
+      })
+      .then(() => {
         actions.resetForm();
         setSelectedPriority('Without');
         setSelectedDate(null);
