@@ -12,6 +12,7 @@ import { deleteTask, updateTask } from '../../redux/tasks/tasksOperations';
 import { setCurrentTask } from '../../redux/tasks/tasksSlice';
 import { selectColumnsForBoard } from '../../redux/columns/columnsSelectors';
 import { fetchBoard } from '../../redux/board/boardOperations';
+import { selectFilterPriority } from '../../redux/filter/filterSelectors';
 
 import s from './TaskItem.module.css';
 
@@ -23,6 +24,7 @@ const TaskItem = ({ tasks, boardId }) => {
 
   const dispatch = useDispatch();
   const columns = useSelector(state => selectColumnsForBoard(state, boardId));
+  const priority = useSelector(selectFilterPriority);
 
   useEffect(() => {
     return () => {
@@ -60,7 +62,7 @@ const TaskItem = ({ tasks, boardId }) => {
     )
       .unwrap()
       .then(() => {
-        return dispatch(fetchBoard({ id: boardId }));
+        return dispatch(fetchBoard({ id: boardId, priority }));
       })
       .then(() => {
         handleCloseMenu();
@@ -78,7 +80,7 @@ const TaskItem = ({ tasks, boardId }) => {
     )
       .unwrap()
       .then(() => {
-        return dispatch(fetchBoard({ id: boardId }));
+        return dispatch(fetchBoard({ id: boardId, priority }));
       })
       .then(() => {
         setLoadingTaskId(null);
