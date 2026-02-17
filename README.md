@@ -3,6 +3,10 @@
 TaskPro is a modern web application designed for task and project management.
 This repository contains the frontend portion of the application.
 
+## 🌐 Live Site
+
+[Visit TaskPro Live](https://task-pro-frontend-alpha.vercel.app/)
+
 ## 📋 Project Features
 
 - ✅ Kanban board with task and column-based organization
