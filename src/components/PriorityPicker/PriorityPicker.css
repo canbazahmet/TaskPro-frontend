@@ -9,7 +9,7 @@
   transform: scale(0.8) !important;
 }
 
-.priority-picker-radio:before {
+.priority-picker-radio::before {
   position: absolute !important;
   content: '' !important;
   display: block !important;
@@ -20,27 +20,27 @@
   z-index: 5 !important;
 }
 
-.priority-picker-radio-Without:before {
+.priority-picker-radio-Without::before {
   background-color: var(--without) !important;
   border-color: var(--without) !important;
 }
 
-.priority-picker-radio-Low:before {
+.priority-picker-radio-Low::before {
   background-color: var(--low) !important;
   border-color: var(--low) !important;
 }
 
-.priority-picker-radio-Medium:before {
+.priority-picker-radio-Medium::before {
   background-color: var(--medium) !important;
   border-color: var(--medium) !important;
 }
 
-.priority-picker-radio-High:before {
+.priority-picker-radio-High::before {
   background-color: var(--hight) !important;
   border-color: var(--hight) !important;
 }
 
-.priority-picker-radio.Mui-checked:before {
+.priority-picker-radio.Mui-checked::before {
   display: none !important;
 }
 
