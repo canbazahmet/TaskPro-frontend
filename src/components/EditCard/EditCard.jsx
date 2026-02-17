@@ -10,10 +10,7 @@ import CustomDatePicker from '../CustomDatePicker/CustomDatePicker.jsx';
 import PriorityPicker from '../PriorityPicker/PriorityPicker.jsx';
 
 import { addCardSchema } from '../../helpers/addCardSchema.js';
-import {
-  selectCurrentTask,
-  selectIsLoading,
-} from '../../redux/tasks/tasksSelectors.js';
+import { selectCurrentTask } from '../../redux/tasks/tasksSelectors.js';
 import { selectBoard } from '../../redux/board/boardSelectors.js';
 import { updateTask } from '../../redux/tasks/tasksOperations.js';
 import { fetchBoard } from '../../redux/board/boardOperations.js';
@@ -27,7 +24,6 @@ dayjs.extend(isSameOrAfter);
 const EditCard = ({ onSuccess }) => {
   const dispatch = useDispatch();
 
-  const isLoading = useSelector(selectIsLoading);
   const card = useSelector(selectCurrentTask);
   const board = useSelector(selectBoard);
   const priority = useSelector(selectFilterPriority);
